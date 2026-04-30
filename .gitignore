@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.backup.json
+*.csv
+*.json
+.vscode/
+.idea/
+*.swp
+*.tmp
+*.log

@@ -1,0 +1,3481 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>SISTEMI SHKOLLOR V3.2 - Plani Mesimor i Riorganizuar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Poppins', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2f44 0%, #145c8a 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .login-container {
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .login-card h2 { color: #0b4b6e; margin-bottom: 10px; }
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+        .login-input:focus { border-color: #0b4b6e; outline: none; }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0b4b6e;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .admin-link { margin-top: 20px; font-size: 13px; }
+        .admin-link a { color: #ed6c02; text-decoration: none; cursor: pointer; }
+
+        .header {
+            background: linear-gradient(135deg, #0a2f44, #0b4b6e);
+            color: white;
+            padding: 15px 25px;
+        }
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .btn-primary { background: #0b4b6e; color: white; }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-warning { background: #ed6c02; color: white; }
+        .btn-danger { background: #c62828; color: white; }
+        .btn-info { background: #0288d1; color: white; }
+        .btn-offline { background: #6a1b9a; color: white; }
+
+        .class-card-large {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .student-table {
+            overflow-x: auto;
+            overflow-y: auto;
+            margin-top: 15px;
+            max-height: 550px;
+            position: relative;
+        }
+        .student-table table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        .student-table th {
+            background: #0b4b6e;
+            color: white;
+            padding: 10px 3px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .student-table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 6px 3px;
+            text-align: center;
+        }
+        .grade-input { 
+            width: 45px; 
+            text-align: center; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            padding: 4px;
+            font-size: 11px;
+        }
+        .grade-input:focus {
+            outline: none;
+            border-color: #0b4b6e;
+            box-shadow: 0 0 3px rgba(11,75,110,0.3);
+            background-color: #fff3e0;
+        }
+        .grade-input.readonly-grade {
+            background-color: #f0f0f0;
+            color: #333;
+            cursor: default;
+            border-color: #ddd;
+        }
+        .absence-input { width: 50px; text-align: center; }
+        .student-name-input { width: 130px; padding: 4px; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 1400px;
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+            transition: 0.2s;
+        }
+        .modal-close:hover {
+            color: #c62828;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #0b4b6e; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .teacher-item, .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .class-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .subject-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .subject-item input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        .subject-item button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .subject-item .move-up, .subject-item .move-down {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .subject-item .delete-subj {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .subject-item .edit-subj {
+            background: #e3f2fd;
+            color: #0b4b6e;
+        }
+        .subjects-list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .active-chip {
+            display: inline-block;
+            padding: 6px 15px;
+            margin: 5px;
+            background: #e3f2fd;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid #0b4b6e;
+            transition: all 0.2s;
+        }
+        .active-chip:hover {
+            background: #0b4b6e;
+            color: white;
+        }
+        .active-chip.active {
+            background: #0b4b6e;
+            color: white;
+        }
+        .active-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            align-items: center;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2e7d32;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            z-index: 10001;
+            animation: fadeOut 2.5s forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0);}
+            80% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+        .hidden { display: none; }
+        .stats-badge {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .semester-selector {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .semester-btn {
+            padding: 8px 24px;
+            border: 2px solid #0b4b6e;
+            background: white;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .semester-btn.active { background: #0b4b6e; color: white; }
+        .semester-btn.disabled { opacity: 0.5; cursor: not-allowed; background: #ccc; border-color: #999; }
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 16px;
+        }
+        
+        .stats-table {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .stats-table h4 {
+            color: #0b4b6e;
+            margin-bottom: 10px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0b4b6e;
+        }
+        
+        .success-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .success-table th, .success-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .success-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        .success-table tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .success-table tr:hover {
+            background: #f0f7ff;
+        }
+        
+        .dashboard-widget {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .dashboard-widget:hover {
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-widget h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-widget .number {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .author-credit {
+            text-align: center;
+            font-size: 11px;
+            padding: 8px;
+            background: #f1f5f9;
+            border-top: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        
+        .offline-badge {
+            background: #6a1b9a;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        
+        @media print {
+            body { 
+                background: white; 
+                padding: 0; 
+                margin: 0;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print, .btn, .action-bar, .semester-selector, .logout-btn, .admin-link, .report-actions, .student-table .btn, .author-credit, .modal, .dashboard-widget, .header, .class-card-large > .btn, .class-item .btn, .teacher-item .btn, .active-selector, .report-actions, .stats-grid, .stats-table .stat-card, .date-badge button, .weeks-control button, .print-btn-group button, .semester-btn { 
+                display: none !important; 
+            }
+            .print-certificate {
+                display: block !important;
+                margin: 0;
+                padding: 0;
+            }
+            .stats-table, .success-table, .student-table {
+                display: block !important;
+            }
+            .success-table th, .success-table td, .student-table th, .student-table td {
+                border: 1px solid #000 !important;
+            }
+            .certificate {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+                margin: 0;
+                padding: 10mm 12mm;
+                width: 100%;
+                height: auto;
+                min-height: 297mm;
+                box-sizing: border-box;
+            }
+            body, html {
+                margin: 0;
+                padding: 0;
+                width: 210mm;
+            }
+        }
+        
+        .certificate {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            padding: 12mm 15mm;
+            margin: 0 auto;
+            border: 2px solid #d4af37;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            position: relative;
+        }
+        
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 8mm;
+            border-bottom: 2px solid #0b4b6e;
+            padding-bottom: 5mm;
+        }
+        
+        .certificate-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d4af37;
+            margin: 3mm 0;
+            letter-spacing: 2px;
+        }
+        
+        .certificate-subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0b4b6e;
+        }
+        
+        .certificate-school {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0b4b6e;
+        }
+        
+        .certificate-student {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin: 8mm 0;
+            padding: 5mm;
+            border-bottom: 1px dashed #999;
+            border-top: 1px dashed #999;
+            background: #f5f5f5;
+        }
+        
+        .certificate-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 5mm 0;
+            font-size: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .certificate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5mm 0;
+            font-size: 11px;
+        }
+        
+        .certificate-table th, .certificate-table td {
+            border: 1px solid #333;
+            padding: 4px 6px;
+            text-align: center;
+        }
+        
+        .certificate-table th {
+            background: #0b4b6e;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .certificate-avg-box {
+            background: #e8f5e9;
+            padding: 4mm;
+            text-align: center;
+            border-radius: 8px;
+            margin: 5mm 0;
+        }
+        
+        .certificate-avg-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        
+        .certificate-absences-box {
+            background: #fff3e0;
+            padding: 4mm;
+            margin: 5mm 0;
+            border-radius: 8px;
+        }
+        
+        .certificate-signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10mm;
+            padding-top: 5mm;
+            border-top: 1px solid #333;
+        }
+        
+        .certificate-signature {
+            text-align: center;
+            width: 140px;
+        }
+        
+        .certificate-signature-line {
+            border-top: 1px solid #333;
+            margin-top: 8mm;
+            padding-top: 2mm;
+        }
+        
+        .stats-modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        .stats-modal-table th, .stats-modal-table td {
+            border: 1px solid #ccc;
+            padding: 4px 2px;
+            text-align: center;
+        }
+        .stats-modal-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        
+        .curriculum-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .curriculum-table th, .curriculum-table td {
+            border: 1px solid #ddd;
+            padding: 6px 4px;
+            text-align: center;
+        }
+        .curriculum-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        .curriculum-table input {
+            width: 60px;
+            text-align: center;
+            padding: 3px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .curriculum-table .hours-per-week {
+            width: 50px;
+        }
+        .curriculum-table .hours-done {
+            width: 55px;
+        }
+        
+        .holiday-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .holiday-table th, .holiday-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .holiday-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .schedule-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        .schedule-table select {
+            width: 100%;
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .date-badge {
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2e7d32;
+        }
+        .date-badge span {
+            font-weight: bold;
+            color: #0b4b6e;
+        }
+        .date-status {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .version-badge {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            z-index: 9999;
+        }
+        
+        .teacher-data-status {
+            font-size: 11px;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 8px;
+        }
+        .teacher-data-status.synced {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .teacher-data-status.offline {
+            background: #fff3e0;
+            color: #ed6c02;
+        }
+        
+        .behavior-select {
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 11px;
+            background: white;
+        }
+        .behavior-select:disabled {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .print-btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        
+        .weeks-control {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .weeks-control label {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .weeks-control input {
+            width: 70px;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        
+        .teacher-stats-container {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 16px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #a5d6a7;
+        }
+        .teacher-stats-item {
+            background: white;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0b4b6e;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .teacher-stats-item span {
+            color: #2e7d32;
+            font-size: 15px;
+            font-weight: 700;
+            background: #e8f5e9;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .teacher-stats-item.important {
+            background: #fff3e0;
+            border-left: 3px solid #ed6c02;
+        }
+        .teacher-stats-item.important span {
+            background: #fff3e0;
+            color: #ed6c02;
+        }
+        
+        .report-container {
+            font-family: 'Times New Roman', Times, serif;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 10mm;
+        }
+        
+        .report-header {
+            text-align: center;
+            margin-bottom: 10mm;
+            border-bottom: 2px solid #0b4b6e;
+            padding-bottom: 5mm;
+        }
+        
+        .report-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0b4b6e;
+        }
+        
+        .report-subtitle {
+            font-size: 14px;
+            margin-top: 3mm;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5mm 0;
+            font-size: 10px;
+        }
+        
+        .report-table th, .report-table td {
+            border: 1px solid #000;
+            padding: 3px 4px;
+            text-align: center;
+        }
+        
+        .report-table th {
+            background: #0b4b6e;
+            color: white;
+        }
+        
+        .report-summary {
+            margin: 5mm 0;
+            padding: 3mm;
+            background: #f5f5f5;
+        }
+        
+        @media print {
+            .report-container {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="version-badge">Versioni 3.2 - Plani i Përmirësuar</div>
+<div id="app">
+    <div id="loginContainer" class="login-container">
+        <div class="login-card">
+            <h2>SISTEMI SHKOLLOR V3.2</h2>
+            <div class="subtitle" style="color:#666; margin-bottom:20px;">Hyni si kujdestar i klases</div>
+            <input type="text" id="username" class="login-input" placeholder="Emri i perdoruesit">
+            <input type="password" id="password" class="login-input" placeholder="Fjalekalimi">
+            <button class="login-btn" onclick="performLogin()">Hyr</button>
+            <div class="admin-link">
+                <a onclick="showAdminLogin()">Hyr si Administrator</a>
+            </div>
+            <div class="author-credit" style="margin-top:15px; font-size:10px;">Naser A. Guri</div>
+        </div>
+    </div>
+
+    <div id="mainContainer" class="container hidden">
+        <div class="header">
+            <h1>SISTEMI INTEGRATIV SHKOLLOR V3.2</h1>
+            <div class="user-info">
+                <div>
+                    <div>SHFMU "EMIN DURAKU" KACANIK</div>
+                    <div>Viti: <span id="schoolYearDisplay">2025-2026</span> | <span id="userNameDisplay"></span></div>
+                    <div id="principalDisplay" style="font-size:12px; opacity:0.8;"></div>
+                    <div id="offlineStatusDisplay" class="teacher-data-status" style="display:none;"></div>
+                </div>
+                <button class="logout-btn no-print" onclick="logout()">Dil</button>
+            </div>
+        </div>
+        <div id="dynamicContent"></div>
+        <div class="author-credit no-print">Zhvilluar nga: Naser A. Guri | Versioni 3.2</div>
+    </div>
+</div>
+
+<!-- Modalet -->
+<div id="teacherModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeTeacherModal()">×</span><h2 id="teacherModalTitle" style="color:#0b4b6e; margin-bottom:20px;">Shto Kujdestar</h2><div class="form-group"><label>Emri i plote</label><input type="text" id="teacherName" placeholder="Shkruani emrin"></div><div class="form-group"><label>Emri i perdoruesit</label><input type="text" id="teacherUsername" placeholder="p.sh. kujdestari_ix1"></div><div class="form-group"><label>Fjalekalimi</label><input type="text" id="teacherPassword" placeholder="Vendosni fjalekalimin"></div><div class="form-group"><label>Klasa</label><select id="teacherClass"></select></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveTeacher()">Ruaj</button><button class="btn btn-warning" onclick="closeTeacherModal()">Anulo</button></div></div></div>
+<div id="classEditModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeClassEditModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Ndrysho Emrin e Klases</h2><div class="form-group"><label>Emri i ri</label><input type="text" id="newClassName" placeholder="p.sh. IX-1"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveClassName()">Ruaj</button><button class="btn btn-warning" onclick="closeClassEditModal()">Anulo</button></div></div></div>
+<div id="activeModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeActiveModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Menaxho Aktivet (Departamentet)</h2><p style="font-size:13px; color:#555; margin-bottom:15px;">Aktivet perdoren per te grupuar klasat sipas niveleve (IX, VIII, VII, VI, etj.)</p><div id="activesListContainer" class="subjects-list-container"></div><div class="form-group" style="margin-top:10px;"><label>Shto Aktiv te ri</label><div style="display:flex; gap:10px;"><input type="text" id="newActiveName" placeholder="Emri i aktivit (p.sh. KLASA IX)" style="flex:2;"><input type="text" id="newActiveCode" placeholder="Kodi" style="width:80px;" value="IX"><button class="btn btn-success" onclick="addNewActive()" style="white-space:nowrap;">Shto</button></div></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveActives()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeActiveModal()">Anulo</button></div></div></div>
+<div id="subjectsModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeSubjectsModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Menaxho Lendet (Globale)</h2><p style="font-size:13px; color:#555; margin-bottom:15px;">Ndryshimet do te aplikohen per te gjitha klasat.</p><div id="subjectsListContainer" class="subjects-list-container"></div><div class="form-group" style="margin-top:10px;"><label>Shto lende te re</label><div style="display:flex; gap:10px;"><input type="text" id="newSubjectName" placeholder="Emri i lendes" style="flex:2;"><input type="text" id="newSubjectCode" placeholder="Kodi" style="width:80px;" value="LND"><button class="btn btn-success" onclick="addNewSubject()" style="white-space:nowrap;">Shto</button></div></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveSubjectsOrder()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeSubjectsModal()">Anulo</button></div></div></div>
+<div id="curriculumModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeCurriculumModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Plani Mesimor i Klases</h2><div id="curriculumContent"></div><div class="print-btn-group no-print"><button class="btn btn-primary" onclick="printCurriculumPlan()">🖨️ Printo Planin Mesimor</button><button class="btn btn-primary" onclick="saveClassCurriculum()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeCurriculumModal()">Anulo</button></div></div></div>
+<div id="adminCurriculumModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeAdminCurriculumModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Plani Mesimor i Klasave</h2><div id="adminCurriculumContent"></div><div class="print-btn-group no-print"><button class="btn btn-primary" onclick="printAdminCurriculumPlan()">🖨️ Printo Planet Mesimore</button><button class="btn btn-primary" onclick="saveAdminCurriculum()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeAdminCurriculumModal()">Anulo</button></div></div></div>
+<div id="scheduleModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeScheduleModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Orari i Klases</h2><div id="scheduleContent"></div><div class="print-btn-group no-print"><button class="btn btn-primary" onclick="printSchedule()">🖨️ Printo Orarin</button><button class="btn btn-primary" onclick="saveSchedule()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeScheduleModal()">Anulo</button></div></div></div>
+<div id="holidayModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeHolidayModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Festat (Data qe nuk mesohet)</h2><div class="form-group"><label>Shto feste te re</label><div style="display:flex; gap:10px; flex-wrap:wrap;"><input type="text" id="holidayDate" placeholder="Data (DD/MM/YYYY)" style="width:150px;"><input type="text" id="holidayName" placeholder="Emri i festes" style="flex:2;"><label style="display:flex; align-items:center;"><input type="checkbox" id="holidaySem1"> Gjysmevjetori I</label><label style="display:flex; align-items:center;"><input type="checkbox" id="holidaySem2"> Gjysmevjetori II</label><button class="btn btn-success" onclick="addHoliday()">Shto</button></div></div><div id="holidaysList"></div><div class="print-btn-group no-print"><button class="btn btn-primary" onclick="printHolidays()">🖨️ Printo Festat</button><button class="btn btn-primary" onclick="saveHolidays()">Ruaj ndryshimet</button><button class="btn btn-warning" onclick="closeHolidayModal()">Anulo</button></div></div></div>
+<div id="changePrincipalModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closePrincipalModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Ndrysho Emrin e Drejtorit</h2><div class="form-group"><label>Emri i ri i drejtorit</label><input type="text" id="newPrincipalName" placeholder="Shkruani emrin e drejtorit"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="savePrincipalName()">Ruaj</button><button class="btn btn-warning" onclick="closePrincipalModal()">Anulo</button></div></div></div>
+<div id="changeYearModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeYearModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Ndrysho Vitin Shkollor</h2><div class="form-group"><label>Viti i ri (formati: YYYY-YYYY)</label><input type="text" id="newSchoolYear" placeholder="p.sh. 2025-2026"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveSchoolYear()">Ruaj</button><button class="btn btn-warning" onclick="closeYearModal()">Anulo</button></div></div></div>
+<div id="semesterDatesModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeSemesterDatesModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Datat e Gjysmevjetoreve dhe Vitit Shkollor</h2><div class="date-badge"><h3>📅 Viti Shkollor</h3><div class="form-group"><label>Data e fillimit</label><input type="date" id="schoolStartDate" value=""></div><div class="form-group"><label>Data e mbarimit</label><input type="date" id="schoolEndDate" value=""></div></div><div class="date-badge"><h3>📚 Gjysmevjetori I</h3><div class="form-group"><label>Data e fillimit</label><input type="date" id="semester1StartDate" value=""></div><div class="form-group"><label>Data e mbarimit</label><input type="date" id="semester1EndDate" value=""></div></div><div class="date-badge"><h3>📖 Gjysmevjetori II</h3><div class="form-group"><label>Data e fillimit</label><input type="date" id="semester2StartDate" value=""></div><div class="form-group"><label>Data e mbarimit</label><input type="date" id="semester2EndDate" value=""></div></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveSemesterDates()">Ruaj datat</button><button class="btn btn-warning" onclick="closeSemesterDatesModal()">Anulo</button></div></div></div>
+<div id="changePasswordModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closePasswordModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Ndrysho Fjalekalimin</h2><div class="form-group"><label>Lloji</label><select id="passwordTypeSelect" onchange="togglePasswordType()"><option value="teacher">Kujdestar</option><option value="admin">Administrator (admin)</option></select></div><div class="form-group" id="teacherSelectGroup"><label>Kujdestari</label><select id="passwordTeacherSelect"></select></div><div class="form-group" id="adminPasswordGroup" style="display:none;"><label>Fjalekalimi i ri per admin</label><input type="text" id="adminNewPassword" placeholder="Vendosni fjalekalimin e ri per admin"></div><div class="form-group"><label>Fjalekalimi i ri</label><input type="text" id="newPassword" placeholder="Vendosni fjalekalimin e ri"></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveTeacherPassword()">Ruaj</button><button class="btn btn-warning" onclick="closePasswordModal()">Anulo</button></div></div></div>
+<div id="statsModal" class="modal"><div class="modal-content"><span class="modal-close" onclick="closeStatsModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;" id="statsModalTitle">Statistikat e Klases</h2><div id="statsModalContent"></div><div class="print-btn-group no-print"><button class="btn btn-primary" onclick="printStatsModal()">🖨️ Printo Statistikat</button><button class="btn btn-warning" onclick="closeStatsModal()">Mbyll</button></div></div></div>
+<div id="behaviorModal" class="modal"><div class="modal-content" style="max-width:500px;"><span class="modal-close" onclick="closeBehaviorModal()">×</span><h2 style="color:#0b4b6e; margin-bottom:20px;">Ndrysho Sjelljen e Nxënësit</h2><div id="behaviorStudentInfo"></div><div class="form-group"><label>Sjellja</label><select id="behaviorValue" class="behavior-select" style="width:100%; padding:10px;"><option value="Shembullore">Shembullore</option><option value="Shume mire">Shume mire</option><option value="Mire">Mire</option><option value="Mjaftueshme">Mjaftueshme</option><option value="Keq">Keq</option></select></div><div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;"><button class="btn btn-primary" onclick="saveBehavior()">Ruaj</button><button class="btn btn-warning" onclick="closeBehaviorModal()">Anulo</button></div></div></div>
+<div id="resetConfirmModal" class="modal"><div class="modal-content" style="max-width:450px;"><span class="modal-close" onclick="closeResetModal()">×</span><h2 style="color:#c62828; margin-bottom:15px;">⚠️ Rivendosje e të Dhënave</h2><p style="margin-bottom:15px;">Ky veprim do të rivendosë të gjitha të dhënat në gjendjen fillestare (24 klasat me 20 nxënës secila dhe kujdestarët e paracaktuar).</p><p style="margin-bottom:20px; color:#c62828; font-weight:bold;">Të dhënat aktuale do të humbasin! A jeni i sigurt?</p><div style="display:flex; gap:10px; justify-content:center;"><button class="btn btn-danger" onclick="confirmResetData()">Po, Rivendos</button><button class="btn btn-primary" onclick="closeResetModal()">Anulo</button></div></div></div>
+
+<script>
+    console.log("Sistemi Shkollor V3.2 - Duke u ngarkuar...");
+    
+    const APP_VERSION = "3.2";
+    
+    // Lëndët globale
+    const ALL_SUBJECTS = [
+        { code: 'SQ', key: 'gjuheshqipe', name: 'Gjuhe Shqipe', group: 'Gjuhe dhe komunikim' },
+        { code: 'EN', key: 'anglisht', name: 'Gjuhe Angleze', group: 'Gjuhe dhe komunikim' },
+        { code: 'DE', key: 'gjermanisht', name: 'Gjuhe Gjermane', group: 'Gjuhe dhe komunikim' },
+        { code: 'MZ', key: 'muzike', name: 'Edukate Muzikore', group: 'Gjuhe dhe komunikim' },
+        { code: 'VZ', key: 'vizatim', name: 'Edukate Figurative', group: 'Gjuhe dhe komunikim' },
+        { code: 'MA', key: 'matematike', name: 'Matematike', group: 'Matematike' },
+        { code: 'FZ', key: 'fizike', name: 'Fizike', group: 'Shkencat natyrore' },
+        { code: 'KM', key: 'kimi', name: 'Kimi', group: 'Shkencat natyrore' },
+        { code: 'BG', key: 'biologji', name: 'Biologji', group: 'Shkencat natyrore' },
+        { code: 'HS', key: 'histori', name: 'Histori', group: 'Shoqeria dhe mjedisi' },
+        { code: 'GJ', key: 'gjeografi', name: 'Gjeografi', group: 'Shoqeria dhe mjedisi' },
+        { code: 'EQ', key: 'edqytetare', name: 'Edukate Qytetare', group: 'Shoqeria dhe mjedisi' },
+        { code: 'TK', key: 'teknologji', name: 'Teknologji', group: 'Jeta dhe puna' },
+        { code: 'EF', key: 'edfizike', name: 'Edukate Fizike', group: 'Edukate fizike, sport dhe shendeti' },
+        { code: 'MZ2', key: 'msimzgjedhor', name: 'Mesim Zgjedhor', group: 'Mesimi me zgjedhje' }
+    ];
+
+    let systemData = {
+        schoolInfo: { name: "SHFMU 'EMIN DURAKU' KACANIK", year: "2025-2026", principal: "DIANA REKA" },
+        teachers: [],
+        classes: [],
+        actives: [
+            { id: "active_ix", name: "KLASA IX", code: "IX", order: 1 },
+            { id: "active_viii", name: "KLASA VIII", code: "VIII", order: 2 },
+            { id: "active_vii", name: "KLASA VII", code: "VII", order: 3 },
+            { id: "active_vi", name: "KLASA VI", code: "VI", order: 4 }
+        ],
+        adminPassword: "admin123",
+        curriculum: {
+            weeksSem1: 16,
+            weeksSem2: 21
+        },
+        holidays: [],
+        semesterDates: {
+            schoolStart: "2025-09-01",
+            schoolEnd: "2026-06-15",
+            semester1Start: "2025-09-01",
+            semester1End: "2025-12-20",
+            semester2Start: "2026-01-10",
+            semester2End: "2026-06-15"
+        },
+        appVersion: APP_VERSION
+    };
+    
+    let currentUser = null;
+    let currentSemesterView = 'final';
+    let editingClassId = null;
+    let selectedActiveFilter = null;
+    let backupData = null;
+    let currentBehaviorStudent = null;
+    let currentBehaviorClassId = null;
+    
+    let lastScrollPosition = 0;
+    let lastFocusedStudentId = null;
+    let lastFocusedSubjectKey = null;
+    let lastFocusedRowIndex = null;
+    
+    let teacherOfflineData = {
+        lastSync: null,
+        teacherClassData: {}
+    };
+    
+    // ========== FUNKSIONET PËR PËRFUNDIMTARIN AUTOMATIK ==========
+    function getRoundedAverage(grade1, grade2) {
+        let g1 = parseInt(grade1) || 0;
+        let g2 = parseInt(grade2) || 0;
+        if(g1 === 0 && g2 === 0) return 0;
+        if(g1 === 0) return g2;
+        if(g2 === 0) return g1;
+        let avg = (g1 + g2) / 2;
+        return Math.round(avg);
+    }
+    
+    function getFinalGrade(student, subKey) {
+        let g1 = parseInt(student.grades[subKey]) || 0;
+        let g2 = parseInt(student.gradesSemester2[subKey]) || 0;
+        if(g1 === 0 && g2 === 0) return 0;
+        if(g1 === 0) return g2;
+        if(g2 === 0) return g1;
+        let avg = (g1 + g2) / 2;
+        return Math.round(avg);
+    }
+    
+    function getFinalAbsences(student) {
+        return {
+            withReason: (student.absencesWithReason || 0) + (student.absencesWithReasonSemester2 || 0),
+            withoutReason: (student.absencesWithoutReason || 0) + (student.absencesWithoutReasonSemester2 || 0),
+            total: (student.absencesWithReason || 0) + (student.absencesWithReasonSemester2 || 0) + 
+                   (student.absencesWithoutReason || 0) + (student.absencesWithoutReasonSemester2 || 0)
+        };
+    }
+    
+    function getStudentGradeForSemester(student, subKey, semester) {
+        if(semester === 'semester1') return parseInt(student.grades[subKey]) || 0;
+        if(semester === 'semester2') return parseInt(student.gradesSemester2[subKey]) || 0;
+        return getFinalGrade(student, subKey);
+    }
+    
+    function getTotalAbsences(student, semester) {
+        if(semester === 'semester1') { 
+            return { withReason: student.absencesWithReason || 0, withoutReason: student.absencesWithoutReason || 0, total: (student.absencesWithReason || 0) + (student.absencesWithoutReason || 0) };
+        }
+        if(semester === 'semester2') { 
+            return { withReason: student.absencesWithReasonSemester2 || 0, withoutReason: student.absencesWithoutReasonSemester2 || 0, total: (student.absencesWithReasonSemester2 || 0) + (student.absencesWithoutReasonSemester2 || 0) };
+        }
+        return getFinalAbsences(student);
+    }
+    
+    function hasAnyOneFinal(student, subjectsOrder) {
+        for(let sub of subjectsOrder) {
+            if(getFinalGrade(student, sub.key) === 1) return true;
+        }
+        return false;
+    }
+    
+    function countOnesFinal(student, subjectsOrder) {
+        let count = 0;
+        subjectsOrder.forEach(sub => {
+            if(getFinalGrade(student, sub.key) === 1) count++;
+        });
+        return count;
+    }
+    
+    function getStudentAvg(student, subjectsOrder, semester) {
+        let sum = 0, count = 0;
+        subjectsOrder.forEach(sub => {
+            let val = getStudentGradeForSemester(student, sub.key, semester);
+            if(val > 0) { sum += val; count++; }
+        });
+        return count ? (sum / count).toFixed(2) : "0.00";
+    }
+    
+    function hasAnyOne(student, subjectsOrder, semester) {
+        if(semester === 'final') return hasAnyOneFinal(student, subjectsOrder);
+        for(let sub of subjectsOrder) {
+            if(getStudentGradeForSemester(student, sub.key, semester) === 1) return true;
+        }
+        return false;
+    }
+    
+    function getSuccessCategory(student, subjectsOrder, semester) {
+        if(semester === 'final') {
+            if(hasAnyOneFinal(student, subjectsOrder)) return 'fail';
+            let avg = parseFloat(getStudentAvg(student, subjectsOrder, 'final'));
+            if(avg === 0) return 'ungraded';
+            if(avg >= 4.5) return 'excellent';
+            if(avg >= 3.5) return 'verygood';
+            if(avg >= 2.5) return 'good';
+            if(avg >= 1.5) return 'sufficient';
+            return 'fail';
+        }
+        if(hasAnyOne(student, subjectsOrder, semester)) return 'fail';
+        let avg = parseFloat(getStudentAvg(student, subjectsOrder, semester));
+        if(avg === 0) return 'ungraded';
+        if(avg >= 4.5) return 'excellent';
+        if(avg >= 3.5) return 'verygood';
+        if(avg >= 2.5) return 'good';
+        if(avg >= 1.5) return 'sufficient';
+        return 'fail';
+    }
+    
+    function countOnes(student, subjectsOrder, semester) {
+        if(semester === 'final') return countOnesFinal(student, subjectsOrder);
+        let count = 0;
+        subjectsOrder.forEach(sub => {
+            if(getStudentGradeForSemester(student, sub.key, semester) === 1) count++;
+        });
+        return count;
+    }
+    
+    function getSuccessDescription(avg) {
+        let num = parseFloat(avg);
+        if(num >= 4.5) return "Shkelqyeshem";
+        if(num >= 3.5) return "Shume i mire";
+        if(num >= 2.5) return "I mire";
+        if(num >= 1.5) return "Mjaftueshem";
+        return "Pamjaftueshem";
+    }
+    
+    // ========== FUNKSIONET PËR TË DHËNA DHE STORAGE ==========
+    function loadTeacherOfflineData() {
+        let stored = localStorage.getItem('teacherOfflineData_V3');
+        if (stored) {
+            try {
+                teacherOfflineData = JSON.parse(stored);
+            } catch(e) { console.error("Gabim në ngarkimin e të dhënave offline", e); }
+        }
+        if (!teacherOfflineData.teacherClassData) teacherOfflineData.teacherClassData = {};
+        if (!teacherOfflineData.lastSync) teacherOfflineData.lastSync = null;
+    }
+    
+    function saveTeacherOfflineData() {
+        localStorage.setItem('teacherOfflineData_V3', JSON.stringify(teacherOfflineData));
+    }
+    
+    function saveTeacherClassOffline(teacherId, classData) {
+        if (!teacherOfflineData.teacherClassData) teacherOfflineData.teacherClassData = {};
+        teacherOfflineData.teacherClassData[teacherId] = {
+            classData: JSON.parse(JSON.stringify(classData)),
+            lastUpdated: new Date().toISOString()
+        };
+        saveTeacherOfflineData();
+        updateOfflineStatusDisplay(true);
+    }
+    
+    function getTeacherClassOffline(teacherId) {
+        if (teacherOfflineData.teacherClassData && teacherOfflineData.teacherClassData[teacherId]) {
+            return teacherOfflineData.teacherClassData[teacherId].classData;
+        }
+        return null;
+    }
+    
+    function updateOfflineStatusDisplay(isSynced) {
+        let statusDiv = document.getElementById('offlineStatusDisplay');
+        if (statusDiv && currentUser && currentUser.role === 'teacher') {
+            if (isSynced && teacherOfflineData.lastSync) {
+                let lastSyncDate = new Date(teacherOfflineData.lastSync);
+                statusDiv.className = 'teacher-data-status synced';
+                statusDiv.innerHTML = '📱 Të dhënat offline: të sinkronizuara më ' + lastSyncDate.toLocaleDateString() + ' ' + lastSyncDate.toLocaleTimeString();
+                statusDiv.style.display = 'block';
+            } else {
+                statusDiv.className = 'teacher-data-status offline';
+                statusDiv.innerHTML = '📱 Të dhënat offline: të ruajtura lokalisht';
+                statusDiv.style.display = 'block';
+            }
+        } else if (statusDiv) {
+            statusDiv.style.display = 'none';
+        }
+    }
+    
+    function syncTeacherDataWithMain() {
+        if (!currentUser || currentUser.role !== 'teacher') return;
+        let classObj = getCurrentClass();
+        if (classObj) {
+            saveTeacherClassOffline(currentUser.id, {
+                students: classObj.students,
+                subjectsOrder: classObj.subjectsOrder,
+                schedule: classObj.schedule,
+                className: classObj.className,
+                classId: classObj.id
+            });
+            teacherOfflineData.lastSync = new Date().toISOString();
+            saveTeacherOfflineData();
+            updateOfflineStatusDisplay(true);
+            showNotification("Të dhënat u sinkronizuan për punë offline!");
+        }
+    }
+    
+    function exportTeacherClassData() {
+        if (!currentUser || currentUser.role !== 'teacher') {
+            showNotification("Vetëm kujdestarët mund të eksportojnë të dhënat e klasës!");
+            return;
+        }
+        let classObj = getCurrentClass();
+        if (!classObj) {
+            showNotification("Klasa nuk u gjet!");
+            return;
+        }
+        let exportData = {
+            exportType: "teacher_class_data",
+            version: "3.2",
+            teacherId: currentUser.id,
+            teacherName: currentUser.name,
+            className: classObj.className,
+            classId: classObj.id,
+            students: classObj.students,
+            subjectsOrder: classObj.subjectsOrder,
+            schedule: classObj.schedule,
+            exportedAt: new Date().toISOString()
+        };
+        let dataStr = JSON.stringify(exportData, null, 2);
+        let dataBlob = new Blob([dataStr], { type: "application/json" });
+        let url = URL.createObjectURL(dataBlob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = `klasa_${classObj.className}_${currentUser.name}_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+        showNotification("Të dhënat e klasës u eksportuan!");
+    }
+    
+    function importTeacherClassData() {
+        if (!currentUser || currentUser.role !== 'teacher') {
+            showNotification("Vetëm kujdestarët mund të importojnë të dhënat e klasës!");
+            return;
+        }
+        let inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = '.json';
+        inp.onchange = function(e) {
+            let file = e.target.files[0];
+            if(!file) return;
+            let reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    let importedData = JSON.parse(ev.target.result);
+                    if (importedData.exportType !== "teacher_class_data") {
+                        alert("Ky skedar nuk është një eksport i vlefshëm i të dhënave të klasës!");
+                        return;
+                    }
+                    let currentClass = getCurrentClass();
+                    if (importedData.classId !== currentClass.id && importedData.className !== currentClass.className) {
+                        if (!confirm("Ky skedar i përket klasës " + importedData.className + ", por ju jeni në klasën " + currentClass.className + ". A doni të vazhdoni importimin?")) {
+                            return;
+                        }
+                    }
+                    takeBackup();
+                    let classObj = getCurrentClass();
+                    if (classObj) {
+                        classObj.students = importedData.students;
+                        if (importedData.subjectsOrder && importedData.subjectsOrder.length > 0) {
+                            classObj.subjectsOrder = importedData.subjectsOrder;
+                        }
+                        if (importedData.schedule) {
+                            classObj.schedule = importedData.schedule;
+                        }
+                        saveToLocal();
+                        saveTeacherClassOffline(currentUser.id, {
+                            students: classObj.students,
+                            subjectsOrder: classObj.subjectsOrder,
+                            schedule: classObj.schedule,
+                            className: classObj.className,
+                            classId: classObj.id
+                        });
+                        refreshDisplay();
+                        showNotification("Të dhënat u importuan me sukses!");
+                    }
+                } catch(err) {
+                    alert("Gabim gjate leximit te skedarit: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        inp.click();
+    }
+    
+    // ========== FUNKSIONET E REJA PËR ADMIN EXPORT/IMPORT OFFLINE ==========
+    function exportClassDataById(classId) {
+        let classObj = systemData.classes.find(c => c.id === classId);
+        if (!classObj) {
+            showNotification("Klasa nuk u gjet!");
+            return;
+        }
+        let exportData = {
+            exportType: "admin_class_data",
+            version: "3.2",
+            adminExport: true,
+            className: classObj.className,
+            classId: classObj.id,
+            students: classObj.students,
+            subjectsOrder: classObj.subjectsOrder,
+            schedule: classObj.schedule,
+            exportedAt: new Date().toISOString(),
+            exportedBy: "Administrator"
+        };
+        let dataStr = JSON.stringify(exportData, null, 2);
+        let dataBlob = new Blob([dataStr], { type: "application/json" });
+        let url = URL.createObjectURL(dataBlob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = `klasa_${classObj.className}_admin_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+        showNotification("Të dhënat e klasës " + classObj.className + " u eksportuan nga administratori!");
+    }
+    
+    function importClassDataById(classId) {
+        let classObj = systemData.classes.find(c => c.id === classId);
+        if (!classObj) {
+            showNotification("Klasa nuk u gjet!");
+            return;
+        }
+        let inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = '.json';
+        inp.onchange = function(e) {
+            let file = e.target.files[0];
+            if(!file) return;
+            let reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    let importedData = JSON.parse(ev.target.result);
+                    // Lejohet importimi i të dhënave të eksportuara nga kujdestari ose nga admini
+                    if (importedData.exportType !== "teacher_class_data" && importedData.exportType !== "admin_class_data") {
+                        alert("Ky skedar nuk është një eksport i vlefshëm i të dhënave të klasës!");
+                        return;
+                    }
+                    if (importedData.classId !== classObj.id && importedData.className !== classObj.className) {
+                        if (!confirm("Ky skedar i përket klasës " + importedData.className + ", por ju jeni duke importuar për klasën " + classObj.className + ". A doni të vazhdoni?")) {
+                            return;
+                        }
+                    }
+                    takeBackup();
+                    // Importo të dhënat
+                    if (importedData.students) {
+                        classObj.students = importedData.students;
+                    }
+                    if (importedData.subjectsOrder && importedData.subjectsOrder.length > 0) {
+                        classObj.subjectsOrder = importedData.subjectsOrder;
+                    }
+                    if (importedData.schedule) {
+                        classObj.schedule = importedData.schedule;
+                    }
+                    saveToLocal();
+                    refreshDisplay();
+                    showNotification("Të dhënat e klasës " + classObj.className + " u importuan me sukses nga administratori!");
+                } catch(err) {
+                    alert("Gabim gjate leximit te skedarit: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        inp.click();
+    }
+    
+    function saveCurrentPosition() {
+        const tableContainer = document.querySelector('.student-table');
+        if (tableContainer) {
+            lastScrollPosition = tableContainer.scrollTop;
+        }
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.classList && activeElement.classList.contains('grade-input')) {
+            lastFocusedStudentId = activeElement.getAttribute('data-student-id');
+            lastFocusedSubjectKey = activeElement.getAttribute('data-subject-key');
+            lastFocusedRowIndex = activeElement.getAttribute('data-row-index');
+        }
+    }
+    
+    function restorePosition() {
+        if (lastScrollPosition > 0) {
+            setTimeout(() => {
+                const tableContainer = document.querySelector('.student-table');
+                if (tableContainer) {
+                    tableContainer.scrollTop = lastScrollPosition;
+                }
+                if (lastFocusedStudentId && lastFocusedSubjectKey) {
+                    const targetInput = document.querySelector(`.grade-input[data-student-id="${lastFocusedStudentId}"][data-subject-key="${lastFocusedSubjectKey}"]`);
+                    if (targetInput) {
+                        targetInput.focus();
+                        targetInput.select();
+                    }
+                }
+            }, 80);
+        }
+    }
+    
+    function formatDate() {
+        let d = new Date();
+        let dd = String(d.getDate()).padStart(2, '0');
+        let mm = String(d.getMonth() + 1).padStart(2, '0');
+        let yy = String(d.getFullYear()).slice(-2);
+        return dd + '/' + mm + '/' + yy;
+    }
+    
+    function getCurrentSemesterStatus() {
+        let today = new Date();
+        let sem1Start = systemData.semesterDates?.semester1Start ? new Date(systemData.semesterDates.semester1Start) : null;
+        let sem1End = systemData.semesterDates?.semester1End ? new Date(systemData.semesterDates.semester1End) : null;
+        let sem2Start = systemData.semesterDates?.semester2Start ? new Date(systemData.semesterDates.semester2Start) : null;
+        let sem2End = systemData.semesterDates?.semester2End ? new Date(systemData.semesterDates.semester2End) : null;
+        if(sem1Start && sem1End && today >= sem1Start && today <= sem1End) return "semester1_active";
+        if(sem2Start && sem2End && today >= sem2Start && today <= sem2End) return "semester2_active";
+        if(sem1End && today > sem1End && (!sem2Start || today < sem2Start)) return "between_semesters";
+        if(sem2End && today > sem2End) return "year_ended";
+        return "not_started";
+    }
+    
+    function getSemesterDateInfo() {
+        let status = getCurrentSemesterStatus();
+        let sem1Start = systemData.semesterDates?.semester1Start ? formatDisplayDate(systemData.semesterDates.semester1Start) : 'N/A';
+        let sem1End = systemData.semesterDates?.semester1End ? formatDisplayDate(systemData.semesterDates.semester1End) : 'N/A';
+        let sem2Start = systemData.semesterDates?.semester2Start ? formatDisplayDate(systemData.semesterDates.semester2Start) : 'N/A';
+        let sem2End = systemData.semesterDates?.semester2End ? formatDisplayDate(systemData.semesterDates.semester2End) : 'N/A';
+        let statusText = '';
+        switch(status) {
+            case 'semester1_active': statusText = '✅ Gjysmevjetori I ne vazhdim'; break;
+            case 'semester2_active': statusText = '✅ Gjysmevjetori II ne vazhdim'; break;
+            case 'between_semesters': statusText = '⏸ Pushimi mes gjysmevjetoreve'; break;
+            case 'year_ended': statusText = '🏁 Viti shkollor ka perfunduar'; break;
+            default: statusText = '📅 Viti shkollor nuk ka filluar ende';
+        }
+        return { sem1Start, sem1End, sem2Start, sem2End, statusText, status };
+    }
+    
+    function formatDisplayDate(dateStr) {
+        if(!dateStr) return 'N/A';
+        let d = new Date(dateStr);
+        return d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
+    }
+    
+    function createEmptyStudent(id, name, gender) {
+        name = name || "Nxenes i ri";
+        gender = gender || "M";
+        let grades = {}, grades2 = {};
+        ALL_SUBJECTS.forEach(sub => { grades[sub.key] = ''; grades2[sub.key] = ''; });
+        return { id: id, name: name, gender: gender, grades: grades, gradesSemester2: grades2,
+            absencesWithReason: 0, absencesWithoutReason: 0,
+            absencesWithReasonSemester2: 0, absencesWithoutReasonSemester2: 0,
+            notes: { note1: '' }, notesSemester2: { note1: '' },
+            behavior: 'Shembullore' };
+    }
+    
+    function createClass(className, teacherId, activeId) {
+        teacherId = teacherId || null;
+        activeId = activeId || null;
+        let students = [];
+        for (let i = 1; i <= 20; i++) {
+            let gender = i <= 10 ? 'M' : 'F';
+            let s = createEmptyStudent(i, "Nxënësi " + i, gender);
+            for(let sub of ALL_SUBJECTS) {
+                let r = Math.random();
+                s.grades[sub.key] = r<0.2 ? '5' : r<0.4 ? '4' : r<0.6 ? '3' : r<0.8 ? '2' : '1';
+                s.gradesSemester2[sub.key] = Math.random()<0.2 ? '5' : Math.random()<0.4 ? '4' : Math.random()<0.6 ? '3' : Math.random()<0.8 ? '2' : '1';
+            }
+            students.push(s);
+        }
+        return { id: 'class_' + Date.now() + '_' + Math.random(), className: className, teacherId: teacherId, activeId: activeId, students: students, subjectsOrder: [...ALL_SUBJECTS], schedule: null };
+    }
+    
+    function getSubjectStats(students, subjectsOrder, semester) {
+        let stats = [];
+        subjectsOrder.forEach(sub => {
+            let maleGrades = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+            let femaleGrades = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+            students.forEach(s => {
+                let grade = getStudentGradeForSemester(s, sub.key, semester);
+                if(grade >= 1 && grade <= 5) {
+                    if(s.gender === 'M') {
+                        maleGrades[grade]++;
+                        maleGrades.total++;
+                        maleGrades.sum += grade;
+                    } else {
+                        femaleGrades[grade]++;
+                        femaleGrades.total++;
+                        femaleGrades.sum += grade;
+                    }
+                }
+            });
+            let maleAvg = maleGrades.total > 0 ? (maleGrades.sum / maleGrades.total).toFixed(2) : '0.00';
+            let femaleAvg = femaleGrades.total > 0 ? (femaleGrades.sum / femaleGrades.total).toFixed(2) : '0.00';
+            let totalAvg = (maleGrades.sum + femaleGrades.sum) / (maleGrades.total + femaleGrades.total) || 0;
+            stats.push({
+                subjectName: sub.name,
+                male: {1:maleGrades[1],2:maleGrades[2],3:maleGrades[3],4:maleGrades[4],5:maleGrades[5], avg: maleAvg, total: maleGrades.total},
+                female: {1:femaleGrades[1],2:femaleGrades[2],3:femaleGrades[3],4:femaleGrades[4],5:femaleGrades[5], avg: femaleAvg, total: femaleGrades.total},
+                total: {1:maleGrades[1]+femaleGrades[1],2:maleGrades[2]+femaleGrades[2],3:maleGrades[3]+femaleGrades[3],4:maleGrades[4]+femaleGrades[4],5:maleGrades[5]+femaleGrades[5], avg: totalAvg.toFixed(2), total: maleGrades.total+femaleGrades.total}
+            });
+        });
+        return stats;
+    }
+    
+    function getClassStats(classObj, semester) {
+        let students = classObj.students.filter(s => s.name && s.name.trim());
+        let sumAvg = 0, countAvg = 0;
+        let categories = { excellent:0, verygood:0, good:0, sufficient:0, fail:0, ungraded:0 };
+        let weakOnes = { one:0, two:0, threePlus:0 };
+        let totalWR = 0, totalWOR = 0;
+        students.forEach(s => {
+            let avgNum = parseFloat(getStudentAvg(s, classObj.subjectsOrder, semester));
+            if(avgNum > 0) { sumAvg += avgNum; countAvg++; }
+            let cat = getSuccessCategory(s, classObj.subjectsOrder, semester);
+            categories[cat]++;
+            let ones = countOnes(s, classObj.subjectsOrder, semester);
+            if(ones === 1) weakOnes.one++;
+            else if(ones === 2) weakOnes.two++;
+            else if(ones >= 3) weakOnes.threePlus++;
+            let abs = getTotalAbsences(s, semester);
+            totalWR += abs.withReason;
+            totalWOR += abs.withoutReason;
+        });
+        let classAvg = countAvg > 0 ? (sumAvg / countAvg).toFixed(2) : "0.00";
+        let subjectStats = getSubjectStats(students, classObj.subjectsOrder, semester);
+        return { total: students.length, classAvg, categories, weakOnes, totalWR, totalWOR, totalAbsences: totalWR + totalWOR, subjectStats };
+    }
+    
+    function getGlobalStats(semester, activeFilter) {
+        activeFilter = activeFilter || null;
+        let classesToUse = activeFilter ? systemData.classes.filter(c => c.activeId === activeFilter) : systemData.classes;
+        let allStudents = [];
+        classesToUse.forEach(cls => {
+            cls.students.forEach(s => { allStudents.push({...s, classObj: cls}); });
+        });
+        let subjectStats = getSubjectStats(allStudents, ALL_SUBJECTS, semester);
+        let globalStats = {
+            totalStudents: allStudents.length,
+            totalMale: allStudents.filter(s => s.gender === 'M').length,
+            totalFemale: allStudents.filter(s => s.gender === 'F').length,
+            categories: { excellent:0, verygood:0, good:0, sufficient:0, fail:0, ungraded:0 },
+            maleCategories: { excellent:0, verygood:0, good:0, sufficient:0, fail:0, ungraded:0 },
+            femaleCategories: { excellent:0, verygood:0, good:0, sufficient:0, fail:0, ungraded:0 },
+            totalAbsencesWR: 0, totalAbsencesWOR: 0,
+            weakOnes: { one:0, two:0, threePlus:0 },
+            classesStats: [],
+            subjectStats: subjectStats
+        };
+        allStudents.forEach(s => {
+            let cat = getSuccessCategory(s, s.classObj.subjectsOrder, semester);
+            globalStats.categories[cat]++;
+            if(s.gender === 'M') globalStats.maleCategories[cat]++;
+            else globalStats.femaleCategories[cat]++;
+            let abs = getTotalAbsences(s, semester);
+            globalStats.totalAbsencesWR += abs.withReason;
+            globalStats.totalAbsencesWOR += abs.withoutReason;
+            let ones = countOnes(s, s.classObj.subjectsOrder, semester);
+            if(ones === 1) globalStats.weakOnes.one++;
+            else if(ones === 2) globalStats.weakOnes.two++;
+            else if(ones >= 3) globalStats.weakOnes.threePlus++;
+        });
+        classesToUse.forEach(cls => {
+            let cs = getClassStats(cls, semester);
+            globalStats.classesStats.push({
+                className: cls.className, classAvg: cs.classAvg, total: cs.total,
+                categories: cs.categories, totalAbsences: cs.totalAbsences, weakOnes: cs.weakOnes
+            });
+        });
+        let totalAvgSum = 0, totalAvgCount = 0;
+        globalStats.classesStats.forEach(c => {
+            if(parseFloat(c.classAvg) > 0) { totalAvgSum += parseFloat(c.classAvg) * c.total; totalAvgCount += c.total; }
+        });
+        globalStats.overallAvg = totalAvgCount > 0 ? (totalAvgSum / totalAvgCount).toFixed(2) : "0.00";
+        return globalStats;
+    }
+    
+    // ========== FUNKSIONET PËR ADMIN DASHBOARD ==========
+    function renderAdminDashboard() {
+        let globalStats = getGlobalStats(currentSemesterView, selectedActiveFilter);
+        let activeName = selectedActiveFilter ? (systemData.actives.find(a => a.id === selectedActiveFilter)?.name || "Te gjitha") : "Te gjitha klasat";
+        let dateInfo = getSemesterDateInfo();
+        let isYearEnded = dateInfo.status === 'year_ended';
+        let filteredClasses = selectedActiveFilter ? systemData.classes.filter(c => c.activeId === selectedActiveFilter) : systemData.classes;
+        
+        let html = `
+        <div class="class-card-large">
+            <h2>PANELI I ADMINISTRATORIT - DREJTORIA</h2>
+            <div class="date-badge">
+                <span>📅 ${dateInfo.statusText}</span>
+                <div class="date-status">Gjysmevjetori I: ${dateInfo.sem1Start} - ${dateInfo.sem1End}</div>
+                <div class="date-status">Gjysmevjetori II: ${dateInfo.sem2Start} - ${dateInfo.sem2End}</div>
+                <button class="btn btn-info" style="margin-top:8px;" onclick="openSemesterDatesModal()">📅 Vendos Datat e Gjysmevjetoreve</button>
+            </div>
+            <div class="report-actions">
+                <button class="btn btn-primary" onclick="openPrincipalModal()">Ndrysho Drejtorin</button>
+                <button class="btn btn-success" onclick="openPasswordModal()">Ndrysho Fjalekalimet</button>
+                <button class="btn btn-info" onclick="openYearModal()">Ndrysho Vitin</button>
+                <button class="btn btn-info" onclick="openAdminCurriculumModal()">Plani Mesimor i Klasave</button>
+                <button class="btn btn-warning" onclick="openHolidayModal()">Festat</button>
+                <button class="btn btn-info" onclick="printDirectorReport()">Raporti i Drejtorise</button>
+                <button class="btn btn-warning" onclick="openSubjectsModal()">Menaxho Lendet</button>
+                <button class="btn btn-primary" onclick="openActiveModal()">Menaxho Aktivet</button>
+                <button class="btn btn-warning" onclick="showGlobalStats()">Statistikat e Avancuara</button>
+                <button class="btn btn-danger" onclick="takeBackup()">Backup ne Memorie</button>
+                <button class="btn btn-success" onclick="backupToFile()">💾 Shkarko Backup</button>
+                <button class="btn btn-primary" onclick="restoreFromFile()">📂 Restauro nga Backup</button>
+                <button class="btn btn-primary" onclick="undoChanges()">Undo</button>
+                <button class="btn btn-danger" onclick="openResetModal()">🔄 Rivendos Default</button>
+            </div>
+            <div class="active-selector">
+                <span style="font-weight:bold;">Filtro sipas aktivit:</span>
+                <div class="active-chip ${!selectedActiveFilter ? 'active' : ''}" onclick="setActiveFilter(null)">Te gjitha (${systemData.classes.length})</div>
+                ${systemData.actives.sort((a,b)=>a.order-b.order).map(a => {
+                    let classCount = systemData.classes.filter(c => c.activeId === a.id).length;
+                    return `<div class="active-chip ${selectedActiveFilter === a.id ? 'active' : ''}" onclick="setActiveFilter('${a.id}')">${a.name} (${classCount})</div>`;
+                }).join('')}
+            </div>
+            <div class="semester-selector">
+                <button class="semester-btn ${currentSemesterView === 'semester1' ? 'active' : ''} ${isYearEnded ? 'disabled' : ''}" onclick="${!isYearEnded ? `setSemester('semester1')` : ''}" ${isYearEnded ? 'disabled' : ''}>Gjysmevjetori I</button>
+                <button class="semester-btn ${currentSemesterView === 'semester2' ? 'active' : ''} ${isYearEnded ? 'disabled' : ''}" onclick="${!isYearEnded ? `setSemester('semester2')` : ''}" ${isYearEnded ? 'disabled' : ''}>Gjysmevjetori II</button>
+                <button class="semester-btn ${currentSemesterView === 'final' ? 'active' : ''}" onclick="setSemester('final')">Perfundimtar</button>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:25px;">
+                <div class="dashboard-widget" style="background:#0b4b6e;" onclick="alert('Totali i klasave: ${globalStats.classesStats.length}')">
+                    <h3>TOTALI KLASA</h3><div class="number">${globalStats.classesStats.length}</div>
+                </div>
+                <div class="dashboard-widget" style="background:#2e7d32;" onclick="alert('Totali nxenes: ${globalStats.totalStudents}\nDjem: ${globalStats.totalMale} (${globalStats.totalStudents > 0 ? ((globalStats.totalMale / globalStats.totalStudents) * 100).toFixed(1) : '0'}%)\nVajza: ${globalStats.totalFemale} (${globalStats.totalStudents > 0 ? ((globalStats.totalFemale / globalStats.totalStudents) * 100).toFixed(1) : '0'}%)')">
+                    <h3>TOTALI NXENES</h3><div class="number">${globalStats.totalStudents}</div>
+                    <div style="font-size:12px;">${globalStats.totalMale} (${globalStats.totalStudents > 0 ? ((globalStats.totalMale / globalStats.totalStudents) * 100).toFixed(1) : '0'}%) | ${globalStats.totalFemale} (${globalStats.totalStudents > 0 ? ((globalStats.totalFemale / globalStats.totalStudents) * 100).toFixed(1) : '0'}%)</div>
+                </div>
+                <div class="dashboard-widget" style="background:#ed6c02;" onclick="alert('Mesatarja e pergjithshme: ${globalStats.overallAvg}')">
+                    <h3>MESATARJA</h3><div class="number">${globalStats.overallAvg}</div>
+                </div>
+                <div class="dashboard-widget" style="background:#c62828;" onclick="alert('Mungesat totale:\nMe arsye: ${globalStats.totalAbsencesWR}\nPa arsye: ${globalStats.totalAbsencesWOR}\nGjithsej: ${globalStats.totalAbsencesWR + globalStats.totalAbsencesWOR}')">
+                    <h3>MUNGESAT</h3>
+                    <div class="number">${globalStats.totalAbsencesWR + globalStats.totalAbsencesWOR}</div>
+                    <div style="font-size:10px;">M/A:${globalStats.totalAbsencesWR} | M/PA:${globalStats.totalAbsencesWOR}</div>
+                </div>
+            </div>
+            <div class="stats-table"><h3>SUKSESI SIPAS KATEGORIVE</h3><div class="stats-grid">
+                ${['excellent','verygood','good','sufficient','fail','ungraded'].map(c => `<div class="stat-card" onclick="alert('${c==='excellent'?'Shkelqyeshem':c==='verygood'?'Shume mire':c==='good'?'Mire':c==='sufficient'?'Mjaftueshem':c==='fail'?'Pamjaftueshem':'I panotuar'}\nGjithsej: ${globalStats.categories[c]} (${globalStats.totalStudents > 0 ? ((globalStats.categories[c] / globalStats.totalStudents) * 100).toFixed(1) : '0'}%)\nDjem: ${globalStats.maleCategories[c]} (${globalStats.totalMale > 0 ? ((globalStats.maleCategories[c] / globalStats.totalMale) * 100).toFixed(1) : '0'}%)\nVajza: ${globalStats.femaleCategories[c]} (${globalStats.totalFemale > 0 ? ((globalStats.femaleCategories[c] / globalStats.totalFemale) * 100).toFixed(1) : '0'}%)')">
+                    <h4>${c==='excellent'?'Shkelqyeshem':c==='verygood'?'Shume mire':c==='good'?'Mire':c==='sufficient'?'Mjaftueshem':c==='fail'?'Pamjaftueshem':'I panotuar'}</h4>
+                    <div class="stat-value">${globalStats.categories[c]}</div>
+                    <div style="font-size:12px;">${globalStats.totalStudents > 0 ? ((globalStats.categories[c] / globalStats.totalStudents) * 100).toFixed(1) : '0'}% | ${globalStats.maleCategories[c]} (${globalStats.totalMale > 0 ? ((globalStats.maleCategories[c] / globalStats.totalMale) * 100).toFixed(1) : '0'}%) | ${globalStats.femaleCategories[c]} (${globalStats.totalFemale > 0 ? ((globalStats.femaleCategories[c] / globalStats.totalFemale) * 100).toFixed(1) : '0'}%)</div>
+                </div>`).join('')}
+            </div></div>
+            <div style="margin:20px 0; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="showAddClassModal()">Shto Klase</button>
+                <button class="btn btn-success" onclick="openTeacherModal()">Shto Kujdestar</button>
+                <button class="btn btn-info" onclick="exportAllData()">Eksporto CSV</button>
+            </div>
+            <h3>Menaxhimi i Klasave - ${activeName}</h3>`;
+        
+        if(filteredClasses.length === 0) {
+            html += '<div style="padding:20px; text-align:center; background:#f8f9fa; border-radius:12px;">Nuk ka klasa ne kete aktiv.</div>';
+        } else {
+            filteredClasses.forEach(cls => {
+                let teacher = systemData.teachers.find(t => t.classId === cls.id);
+                html += `<div class="class-item"><div><strong>${cls.className}</strong><br><span>${cls.students.length} nxenes</span></div>
+                    <div>${teacher ? teacher.name : '<span style="color:#c62828;">PA CAKTUAR</span>'}</div>
+                    <div>
+                        <button class="btn btn-primary" onclick="viewClassAsAdmin('${cls.id}')">Shiko</button>
+                        <button class="btn btn-info" onclick="printClassReportById('${cls.id}', '${currentSemesterView}')">Raporti</button>
+                        <button class="btn btn-warning" onclick="showClassStats(systemData.classes.find(c => c.id === '${cls.id}'))">Statistikat</button>
+                        <button class="btn btn-info" onclick="printClassCertificates('${cls.className}')">Deftesat</button>
+                        <button class="btn btn-info" onclick="openClassCurriculumModal('${cls.id}')">Plani</button>
+                        <button class="btn btn-info" onclick="openScheduleModal('${cls.id}')">Orari</button>
+                        <button class="btn btn-offline" onclick="exportClassDataById('${cls.id}')" style="background:#6a1b9a; color:white;">💾 Eksporto Offline</button>
+                        <button class="btn btn-offline" onclick="importClassDataById('${cls.id}')" style="background:#6a1b9a; color:white;">📂 Importo Offline</button>
+                        <button class="btn btn-danger" onclick="clearClassData('${cls.id}')">Fshi te dhenat</button>
+                    </div>
+                </div>`;
+            });
+        }
+        
+        html += '<h3 style="margin-top:20px;">Te gjithe Kujdestaret</h3>';
+        systemData.teachers.forEach(t => {
+            let classObj = systemData.classes.find(c => c.id === t.classId);
+            html += `<div class="teacher-item"><div><strong>${t.name}</strong><br><span>${t.username}</span></div>
+                <div>Klasa: ${classObj ? classObj.className : 'N/A'}</div>
+                <div><button class="btn btn-primary" onclick="editTeacher('${t.id}')">✏️</button>
+                <button class="btn btn-warning" onclick="openChangePasswordForTeacher('${t.id}')">🔑</button>
+                <button class="btn btn-danger" onclick="removeTeacher('${t.id}')">🗑️</button></div></div>`;
+        });
+        
+        document.getElementById('dynamicContent').innerHTML = html;
+        document.getElementById('userNameDisplay').innerHTML = 'ADMINISTRATORI | DREJTORI: ' + systemData.schoolInfo.principal;
+        document.getElementById('principalDisplay').innerHTML = 'Drejtori: ' + systemData.schoolInfo.principal;
+        document.getElementById('schoolYearDisplay').innerHTML = systemData.schoolInfo.year;
+        setupKeyboardNavigation();
+    }
+    
+    function setActiveFilter(activeId) {
+        selectedActiveFilter = activeId;
+        refreshDisplay();
+        let msg = activeId ? "Filtruar sipas " + (systemData.actives.find(a => a.id === activeId)?.name) : "Duke treguar te gjitha klasat";
+        showNotification(msg);
+    }
+    
+    function renderTeacherDashboard(classObj) {
+        if(!classObj) return '<div class="class-card-large">Klasa nuk u gjet!</div>';
+        let stats = getClassStats(classObj, currentSemesterView);
+        let semesterName = currentSemesterView === 'semester1' ? 'Gjysmevjetori I' : (currentSemesterView === 'semester2' ? 'Gjysmevjetori II' : 'Perfundimtar');
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        let isFinalView = currentSemesterView === 'final';
+        let isAdminViewing = (currentUser && currentUser.role === 'admin' && window.viewingClassId);
+        
+        let html = `<div class="class-card-large">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <h2>KLASA ${classObj.className} - ${semesterName} <span style="font-size:14px;">Mes: ${stats.classAvg}</span></h2>
+                <div>
+                    <button class="btn btn-primary" onclick="addStudent()" ${isYearEnded && isFinalView ? 'disabled' : ''}>Shto nxenes</button>
+                    <button class="btn btn-info" onclick="exportClassCSV()">Eksporto CSV</button>
+                    ${!isAdminViewing ? `<button class="btn btn-offline" onclick="exportTeacherClassData()">💾 Eksporto Offline</button>
+                    <button class="btn btn-offline" onclick="importTeacherClassData()">📂 Importo Offline</button>
+                    <button class="btn btn-success" onclick="syncTeacherDataWithMain()">🔄 Sinkronizo Offline</button>` : `
+                    <button class="btn btn-offline" onclick="exportClassDataById('${classObj.id}')">💾 Eksporto Offline (Admin)</button>
+                    <button class="btn btn-offline" onclick="importClassDataById('${classObj.id}')">📂 Importo Offline (Admin)</button>`}
+                    <button class="btn btn-success" onclick="printCurrentClassReport()">Raporti</button>
+                    <button class="btn btn-warning" onclick="showClassStats(getCurrentClass())">Statistikat</button>
+                    <button class="btn btn-info" onclick="printClassCertificates('${classObj.className}')">Deftesat</button>
+                    <button class="btn btn-info" onclick="openClassCurriculumModal('${classObj.id}')">Plani Mesimor</button>
+                    <button class="btn btn-info" onclick="openScheduleModal('${classObj.id}')">Orari</button>
+                </div>
+            </div>
+            <div class="teacher-stats-container">
+                <div class="teacher-stats-item">📊 Mesatarja e klasës: <span>${stats.classAvg}</span></div>
+                <div class="teacher-stats-item">✅ Shkëlqyeshëm: <span>${stats.categories.excellent}</span></div>
+                <div class="teacher-stats-item">⭐ Shumë mirë: <span>${stats.categories.verygood}</span></div>
+                <div class="teacher-stats-item">📖 Mirë: <span>${stats.categories.good}</span></div>
+                <div class="teacher-stats-item">⚠️ Mjaftueshëm: <span>${stats.categories.sufficient}</span></div>
+                <div class="teacher-stats-item important">❌ Pamjaftueshëm: <span>${stats.categories.fail}</span></div>
+                <div class="teacher-stats-item">📅 Mungesat totale: <span>${stats.totalAbsences}</span></div>
+                <div class="teacher-stats-item important">🔴 Nota 1: <span>${stats.weakOnes.one + stats.weakOnes.two + stats.weakOnes.threePlus}</span></div>
+            </div>
+            <div class="semester-selector">
+                <button class="semester-btn ${currentSemesterView === 'semester1' ? 'active' : ''} ${isYearEnded ? 'disabled' : ''}" onclick="${!isYearEnded ? `setSemester('semester1')` : ''}" ${isYearEnded ? 'disabled' : ''}>Gjysmevjetori I</button>
+                <button class="semester-btn ${currentSemesterView === 'semester2' ? 'active' : ''} ${isYearEnded ? 'disabled' : ''}" onclick="${!isYearEnded ? `setSemester('semester2')` : ''}" ${isYearEnded ? 'disabled' : ''}>Gjysmevjetori II</button>
+                <button class="semester-btn ${currentSemesterView === 'final' ? 'active' : ''}" onclick="setSemester('final')">Perfundimtar</button>
+            </div>
+            <div class="student-table">
+                <table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse; width:100%;">
+                    <thead>
+                        <tr style="background:#0b4b6e; color:white;">
+                            <th>#</th>
+                            <th>Emri</th>
+                            <th>Gj</th>
+                            ${classObj.subjectsOrder.map(s => `<th>${s.code}</th>`).join('')}
+                            <th>Mes.</th>
+                            <th>M/A</th>
+                            <th>M/PA</th>
+                            <th>Tot</th>
+                            <th>Nota1</th>
+                            <th>Statusi</th>
+                            <th>Sjellja</th>
+                            <th>Deftesa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+        
+        classObj.students.forEach((s, idx) => {
+            let avg = getStudentAvg(s, classObj.subjectsOrder, currentSemesterView);
+            let ones = countOnes(s, classObj.subjectsOrder, currentSemesterView);
+            let abs = getTotalAbsences(s, currentSemesterView);
+            let cat = getSuccessCategory(s, classObj.subjectsOrder, currentSemesterView);
+            let catText = cat === 'excellent' ? 'Shkelq.' : cat === 'verygood' ? 'Sh.mire' : cat === 'good' ? 'Mire' : cat === 'sufficient' ? 'Mjaft.' : cat === 'fail' ? 'Pamj.' : 'Panot.';
+            let hasOne = hasAnyOne(s, classObj.subjectsOrder, currentSemesterView);
+            let behavior = s.behavior || 'Shembullore';
+            let isReadOnly = isFinalView && isYearEnded;
+            let isFinalReadOnly = (currentSemesterView === 'final');
+            
+            html += `<tr style="background:${hasOne ? '#ffebee' : 'transparent'}">
+                <td>${s.id}</td>
+                <td><input type="text" class="student-name-input" value="${escapeHtml(s.name)}" onchange="updateStudentName(${idx}, this.value)" ${isReadOnly ? 'readonly' : ''}></td>
+                <td><select onchange="updateStudentGender(${idx}, this.value)" ${isReadOnly ? 'disabled' : ''}><option ${s.gender==='M'?'selected':''}>M</option><option ${s.gender==='F'?'selected':''}>F</option></select></td>`;
+            
+            classObj.subjectsOrder.forEach((sub, subIdx) => {
+                let gradeVal = getStudentGradeForSemester(s, sub.key, currentSemesterView);
+                let readonlyAttr = (isReadOnly || isFinalReadOnly) ? 'readonly' : '';
+                let additionalClass = (isFinalReadOnly && !isReadOnly) ? 'readonly-grade' : '';
+                html += `<td><input type="number" min="1" max="5" class="grade-input ${additionalClass}" 
+                    value="${gradeVal || ''}" ${readonlyAttr} 
+                    onchange="${!isFinalReadOnly ? `updateGrade(${idx}, '${sub.key}', this.value)` : ''}"
+                    data-student-id="${s.id}"
+                    data-subject-key="${sub.key}"
+                    data-row-index="${idx}"
+                    data-col-index="${subIdx}"></td>`;
+            });
+            
+            html += `<td><strong>${avg}</strong></td>
+                <td><input type="number" class="absence-input" value="${abs.withReason}" onchange="updateAbsence(${idx}, 'wr', this.value)" ${isReadOnly ? 'readonly' : ''}></td>
+                <td><input type="number" class="absence-input" value="${abs.withoutReason}" onchange="updateAbsence(${idx}, 'wor', this.value)" ${isReadOnly ? 'readonly' : ''}></td>
+                <td><strong>${abs.total}</strong></td>
+                <td>${ones}</td>
+                <td style="background:${hasOne ? '#ffcdd2' : '#e8f5e9'};">${catText}</td>
+                <td><select class="behavior-select" onchange="updateBehavior(${idx}, this.value)" ${isReadOnly ? 'disabled' : ''}>
+                    <option value="Shembullore" ${behavior === 'Shembullore' ? 'selected' : ''}>Shembullore</option>
+                    <option value="Shume mire" ${behavior === 'Shume mire' ? 'selected' : ''}>Shume mire</option>
+                    <option value="Mire" ${behavior === 'Mire' ? 'selected' : ''}>Mire</option>
+                    <option value="Mjaftueshme" ${behavior === 'Mjaftueshme' ? 'selected' : ''}>Mjaftueshme</option>
+                    <option value="Keq" ${behavior === 'Keq' ? 'selected' : ''}>Keq</option>
+                </select></td>
+                <td><button class="btn btn-info" style="padding:2px 8px;" onclick="printSingleCertificate(${idx})">📜</button></td>
+                <td><button class="btn btn-danger" style="padding:2px 8px;" onclick="removeStudent(${idx})" ${isReadOnly ? 'disabled' : ''}>✖</button></td>
+            </tr>`;
+        });
+        html += `</tbody>
+                </table>
+            </div>
+        </div>`;
+        return html;
+    }
+    
+    function updateBehavior(studIdx, value) {
+        let cls = getCurrentClass();
+        if(cls && cls.students[studIdx]) {
+            cls.students[studIdx].behavior = value;
+            saveToLocal();
+            refreshDisplay();
+            showNotification(`Sjellja e ${cls.students[studIdx].name} u ndryshua!`);
+        }
+    }
+    
+    function refreshDisplay() {
+        if(!currentUser) return;
+        if(currentUser.role === 'admin') {
+            renderAdminDashboard();
+        } else if(currentUser.role === 'teacher') {
+            let cls = getCurrentClass();
+            document.getElementById('dynamicContent').innerHTML = cls ? renderTeacherDashboard(cls) : '<div class="class-card-large">Klasa nuk u gjet!</div>';
+            document.getElementById('userNameDisplay').innerHTML = 'KUJDESTARI | ' + currentUser.name;
+            document.getElementById('principalDisplay').innerHTML = '';
+            document.getElementById('schoolYearDisplay').innerHTML = systemData.schoolInfo.year;
+            setupKeyboardNavigation();
+            updateOfflineStatusDisplay(!!teacherOfflineData.teacherClassData[currentUser.id]);
+            restorePosition();
+        }
+    }
+    
+    function getCurrentClass() {
+        if(!currentUser) return null;
+        if(currentUser.role === 'admin' && window.viewingClassId) return systemData.classes.find(c => c.id === window.viewingClassId);
+        if(currentUser.role === 'teacher') return systemData.classes.find(c => c.id === currentUser.classId);
+        return null;
+    }
+    
+    function setupKeyboardNavigation() {
+        document.removeEventListener('keydown', window._keydownHandler);
+        window._keydownHandler = function(e) {
+            if (e.target.classList && e.target.classList.contains('grade-input') && !e.target.readOnly) {
+                let input = e.target;
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    let allInputs = Array.from(document.querySelectorAll('.grade-input:not([readonly])'));
+                    let currentIndex = allInputs.indexOf(input);
+                    if (currentIndex !== -1 && currentIndex + 1 < allInputs.length) {
+                        allInputs[currentIndex + 1].focus();
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    let allInputs = Array.from(document.querySelectorAll('.grade-input:not([readonly])'));
+                    let currentIndex = allInputs.indexOf(input);
+                    let thCount = document.querySelectorAll('.student-table table thead tr th').length;
+                    let rowLength = thCount - 11;
+                    let prevIndex = currentIndex - rowLength;
+                    if (prevIndex >= 0) allInputs[prevIndex].focus();
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    let allInputs = Array.from(document.querySelectorAll('.grade-input:not([readonly])'));
+                    let currentIndex = allInputs.indexOf(input);
+                    let thCount = document.querySelectorAll('.student-table table thead tr th').length;
+                    let rowLength = thCount - 11;
+                    let nextIndex = currentIndex + rowLength;
+                    if (nextIndex < allInputs.length) allInputs[nextIndex].focus();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    let allInputs = Array.from(document.querySelectorAll('.grade-input:not([readonly])'));
+                    let currentIndex = allInputs.indexOf(input);
+                    if (currentIndex > 0) allInputs[currentIndex - 1].focus();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    let allInputs = Array.from(document.querySelectorAll('.grade-input:not([readonly])'));
+                    let currentIndex = allInputs.indexOf(input);
+                    if (currentIndex + 1 < allInputs.length) allInputs[currentIndex + 1].focus();
+                }
+            }
+        };
+        document.addEventListener('keydown', window._keydownHandler);
+    }
+    
+    function updateStudentName(studIdx, value) { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        if(cls && cls.students[studIdx]) { 
+            cls.students[studIdx].name = value; 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Emri u perditesua"); 
+        } 
+    }
+    
+    function updateStudentGender(studIdx, value) { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        if(cls && cls.students[studIdx]) { 
+            cls.students[studIdx].gender = value; 
+            saveToLocal(); 
+            refreshDisplay(); 
+        } 
+    }
+    
+    function updateGrade(studIdx, subKey, value) { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded && currentSemesterView === 'final') {
+            showNotification("Viti shkollor ka përfunduar! Notat nuk mund të ndryshohen më.");
+            refreshDisplay();
+            return;
+        }
+        if(cls && cls.students[studIdx]) { 
+            let v = parseInt(value)||0; 
+            if(currentSemesterView === 'semester1') cls.students[studIdx].grades[subKey] = v.toString(); 
+            else if(currentSemesterView === 'semester2') cls.students[studIdx].gradesSemester2[subKey] = v.toString(); 
+            else { 
+                showNotification("Notat përfundimtare llogariten automatikisht nga gjysmëvjetorët!");
+                return;
+            } 
+            saveToLocal(); 
+            refreshDisplay(); 
+        } 
+    }
+    
+    function updateAbsence(studIdx, type, value) { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded && currentSemesterView === 'final') {
+            showNotification("Viti shkollor ka përfunduar! Mungesat nuk mund të ndryshohen më.");
+            refreshDisplay();
+            return;
+        }
+        if(cls && cls.students[studIdx]) { 
+            let v = parseInt(value)||0; 
+            if(currentSemesterView === 'semester1') { 
+                if(type === 'wr') cls.students[studIdx].absencesWithReason = v; 
+                else cls.students[studIdx].absencesWithoutReason = v; 
+            } else if(currentSemesterView === 'semester2') { 
+                if(type === 'wr') cls.students[studIdx].absencesWithReasonSemester2 = v; 
+                else cls.students[studIdx].absencesWithoutReasonSemester2 = v; 
+            } else { 
+                showNotification("Mungesat përfundimtare janë shuma e dy gjysmëvjetorëve!");
+                return;
+            } 
+            saveToLocal(); 
+            refreshDisplay(); 
+        } 
+    }
+    
+    function addStudent() { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded && currentSemesterView === 'final') {
+            showNotification("Viti shkollor ka përfunduar! Nxënës të rinj nuk mund të shtohen.");
+            return;
+        }
+        if(cls) { 
+            cls.students.push(createEmptyStudent(cls.students.length+1, "Nxenes i ri", "M")); 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Nxenes i shtuar"); 
+        } 
+    }
+    
+    function removeStudent(idx) { 
+        saveCurrentPosition();
+        let cls = getCurrentClass(); 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded && currentSemesterView === 'final') {
+            showNotification("Viti shkollor ka përfunduar! Nxënësit nuk mund të fshihen.");
+            return;
+        }
+        if(cls && cls.students.length>1 && confirm("Fshij?")) { 
+            cls.students.splice(idx,1); 
+            cls.students.forEach((s,i)=>s.id=i+1); 
+            saveToLocal(); 
+            refreshDisplay(); 
+        } else if(cls && cls.students.length<=1) alert("Duhet se paku nje nxenes!"); 
+    }
+    
+    function setSemester(sem) { 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded && sem !== 'final') {
+            showNotification("Viti shkollor ka përfunduar! Mund të shihni vetëm notat përfundimtare.");
+            return;
+        }
+        currentSemesterView = sem; 
+        refreshDisplay(); 
+    }
+    
+    function exportClassCSV() { 
+        let cls = getCurrentClass(); 
+        if(!cls) return; 
+        let period = currentSemesterView==='semester1'?'Gjysmevjetori I':(currentSemesterView==='semester2'?'Gjysmevjetori II':'Perfundimtar'); 
+        let csv = '"Klasa","' + cls.className + '","Periudha","' + period + '"\n"Emri","Gjinia","Mesatarja","KaNote1","Kategoria","Mungesa M/A","Mungesa M/PA","Total Mungesa","Nota1","Sjellja"\n'; 
+        cls.students.forEach(s=>{ 
+            let avg=getStudentAvg(s,cls.subjectsOrder,currentSemesterView); 
+            let hasOne=hasAnyOne(s,cls.subjectsOrder,currentSemesterView); 
+            let cat=getSuccessCategory(s,cls.subjectsOrder,currentSemesterView); 
+            let abs=getTotalAbsences(s,currentSemesterView); 
+            let ones=countOnes(s,cls.subjectsOrder,currentSemesterView); 
+            let catText=cat==='excellent'?'Shkelqyeshem':cat==='verygood'?'Shume mire':cat==='good'?'Mire':cat==='sufficient'?'Mjaftueshem':cat==='fail'?'Pamjaftueshem':'I panotuar'; 
+            let behavior=s.behavior||'Shembullore'; 
+            csv+='"'+s.name+'","'+s.gender+'","'+avg+'","'+(hasOne?"Po":"Jo")+'","'+catText+'","'+abs.withReason+'","'+abs.withoutReason+'","'+abs.total+'","'+ones+'","'+behavior+'"\n';
+        }); 
+        let a=document.createElement('a'); 
+        a.href=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv"})); 
+        a.download=cls.className + '_' + currentSemesterView + '.csv'; 
+        a.click(); 
+    }
+    
+    function showAddClassModal() { 
+        let isYearEnded = getCurrentSemesterStatus() === 'year_ended';
+        if(isYearEnded) {
+            showNotification("Viti shkollor ka përfunduar! Klasa të reja nuk mund të shtohen.");
+            return;
+        }
+        let n=prompt("Emri i klases se re (p.sh. IX-1):"); 
+        if(n) { 
+            let activeOptions = systemData.actives.map(a => a.code + ' - ' + a.name).join("\n");
+            let activeChoice = prompt("Zgjidh aktivin per klasen:\n" + activeOptions + "\nShkruaj kodin e aktivit (p.sh. IX, VIII, VII, VI):", "IX");
+            let active = systemData.actives.find(a => a.code === activeChoice?.toUpperCase());
+            let activeId = active ? active.id : null;
+            systemData.classes.push(createClass(n, null, activeId)); 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Klasa " + n + " u krijua!"); 
+        } 
+    }
+    
+    function openClassEditModal(id, name) { 
+        editingClassId=id; 
+        document.getElementById('newClassName').value=name;
+        document.getElementById('classEditModal').style.display='block'; 
+    }
+    
+    function closeClassEditModal() { 
+        document.getElementById('classEditModal').style.display='none'; 
+        editingClassId=null; 
+    }
+    
+    function saveClassName() { 
+        let newName=document.getElementById('newClassName').value.trim(); 
+        if(newName && editingClassId) { 
+            let c=systemData.classes.find(c=>c.id===editingClassId); 
+            if(c) { 
+                c.className=newName;
+                saveToLocal(); 
+                refreshDisplay(); 
+                showNotification("Emri u ndryshua!"); 
+            } 
+        } 
+        closeClassEditModal(); 
+    }
+    
+    function openTeacherModal(id) { 
+        let t=id?systemData.teachers.find(t=>t.id===id):null; 
+        document.getElementById('teacherModalTitle').innerText=t?'Ndrysho Kujdestarin':'Shto Kujdestar'; 
+        document.getElementById('teacherName').value=t?t.name:''; 
+        document.getElementById('teacherUsername').value=t?t.username:''; 
+        document.getElementById('teacherPassword').value=t?t.password:''; 
+        window.editingTeacherId=t?t.id:null; 
+        let sel=document.getElementById('teacherClass'); 
+        sel.innerHTML='<option value="">-- Zgjidhni klasen --</option>'; 
+        systemData.classes.forEach(cls=>{ 
+            sel.innerHTML+='<option value="'+cls.id+'" '+(t && t.classId===cls.id?'selected':'')+'>'+cls.className+'</option>';
+        }); 
+        document.getElementById('teacherModal').style.display='block'; 
+    }
+    
+    function closeTeacherModal() { 
+        document.getElementById('teacherModal').style.display='none'; 
+        window.editingTeacherId=null; 
+    }
+    
+    function saveTeacher() { 
+        let name=document.getElementById('teacherName').value.trim(), 
+            username=document.getElementById('teacherUsername').value.trim(), 
+            password=document.getElementById('teacherPassword').value.trim(), 
+            classId=document.getElementById('teacherClass').value; 
+        if(!name||!username||!password) { alert("Plotesoni te gjitha fushat!"); return; } 
+        if(!classId) { alert("Zgjidhni klasen!"); return; } 
+        if(window.editingTeacherId) { 
+            let t=systemData.teachers.find(t=>t.id===window.editingTeacherId); 
+            if(t) { 
+                let oldClass=systemData.classes.find(c=>c.id===t.classId); 
+                if(oldClass) oldClass.teacherId=null; 
+                t.name=name; t.username=username; t.password=password; t.classId=classId; 
+                let newClass=systemData.classes.find(c=>c.id===classId); 
+                if(newClass) newClass.teacherId=t.id; 
+                showNotification("Te dhenat u perditesuan!"); 
+            } 
+        } else { 
+            let newTeacher={id:'teacher_'+Date.now(), name:name, username:username, password:password, classId:classId, role:'teacher'}; 
+            systemData.teachers.push(newTeacher); 
+            let cls=systemData.classes.find(c=>c.id===classId); 
+            if(cls) cls.teacherId=newTeacher.id; 
+            showNotification("Kujdestari " + name + " u krijua!"); 
+        } 
+        saveToLocal(); 
+        closeTeacherModal(); 
+        refreshDisplay(); 
+    }
+    
+    function editTeacher(id) { openTeacherModal(id); }
+    
+    function removeTeacher(id) { 
+        if(confirm("Fshi kujdestarin?")) { 
+            let t=systemData.teachers.find(t=>t.id===id); 
+            if(t && t.classId) { 
+                let c=systemData.classes.find(c=>c.id===t.classId); 
+                if(c) c.teacherId=null; 
+            } 
+            systemData.teachers=systemData.teachers.filter(t=>t.id!==id); 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Kujdestari u fshi"); 
+        } 
+    }
+    
+    function assignTeacherToClass(classId) { 
+        let avail=systemData.teachers.filter(t=>!t.classId); 
+        if(avail.length===0) { alert("Nuk ka kujdestare te lire! Shtoni nje te ri."); openTeacherModal(); return; } 
+        let opts=avail.map((t,i)=>(i+1)+'. '+t.name+' ('+t.username+')').join("\n"); 
+        let ch=prompt("Zgjidhni kujdestarin:\n"+opts+"\nNumri:", "1"); 
+        if(ch && !isNaN(ch) && ch>=1 && ch<=avail.length) { 
+            let sel=avail[ch-1]; 
+            systemData.teachers.forEach(t=>{ if(t.classId===classId) t.classId=null; }); 
+            sel.classId=classId; 
+            let cls=systemData.classes.find(c=>c.id===classId); 
+            if(cls) cls.teacherId=sel.id; 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Kujdestari u caktua!"); 
+        } 
+    }
+    
+    function viewClassAsAdmin(classId) { 
+        window.viewingClassId=classId; 
+        let cls=systemData.classes.find(c=>c.id===classId); 
+        if(cls) { 
+            document.getElementById('dynamicContent').innerHTML=renderTeacherDashboard(cls); 
+            document.getElementById('userNameDisplay').innerHTML='ADMINISTRATORI | Duke pare: ' + cls.className; 
+            document.getElementById('dynamicContent').innerHTML+='<div style="margin-top:10px;"><button class="btn btn-warning" onclick="backToAdminPanel()">Kthehu</button></div>'; 
+            setupKeyboardNavigation(); 
+        } 
+    }
+    
+    function backToAdminPanel() { 
+        window.viewingClassId=null; 
+        refreshDisplay(); 
+    }
+    
+    function exportAllData() { 
+        let rows=[["Klasa","Aktivi","Nxenesi","Gjinia","Mesatarja","Mungesa","Nota1","Sjellja"]]; 
+        systemData.classes.forEach(cls=>{ 
+            let active = systemData.actives.find(a=>a.id===cls.activeId); 
+            let activeName = active ? active.name : "Pa aktiv"; 
+            cls.students.forEach(s=>{ 
+                let avg=getStudentAvg(s,cls.subjectsOrder,'final'); 
+                let abs=getTotalAbsences(s,'final'); 
+                let ones=countOnes(s,cls.subjectsOrder,'final'); 
+                let behavior=s.behavior||'Shembullore'; 
+                rows.push([cls.className, activeName, s.name, s.gender, avg, abs.total, ones, behavior]); 
+            }); 
+        }); 
+        let csv=rows.map(r=>r.map(c=>'"'+c+'"').join(",")).join("\n"); 
+        let a=document.createElement('a'); 
+        a.href=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv"})); 
+        a.download='te_dhenat_te_gjitha.csv'; 
+        a.click(); 
+        showNotification("Eksporti u krye"); 
+    }
+    
+    // ========== FUNKSIONET PËR RESET DHE RUAJTJE ==========
+    function openResetModal() {
+        document.getElementById('resetConfirmModal').style.display = 'block';
+    }
+    
+    function closeResetModal() {
+        document.getElementById('resetConfirmModal').style.display = 'none';
+    }
+    
+    function confirmResetData() {
+        if(confirm("⚠️ KUJDES: Ky veprim do të fshijë të gjitha të dhënat ekzistuese dhe do të rivendosë strukturën fillestare me 24 klasa dhe kujdestarët e paracaktuar. A jeni absolutisht i sigurt?")) {
+            resetToDefaultData();
+            closeResetModal();
+            showNotification("Të dhënat u rivendosën në gjendjen fillestare! Faqja po rifreskohet...");
+            setTimeout(() => { location.reload(); }, 1500);
+        }
+    }
+    
+    function resetToDefaultData() {
+        localStorage.removeItem('schoolSystemFinalV3');
+        localStorage.removeItem('teacherOfflineData_V3');
+        
+        systemData = {
+            schoolInfo: { name: "SHFMU 'EMIN DURAKU' KACANIK", year: "2025-2026", principal: "DIANA REKA" },
+            teachers: [],
+            classes: [],
+            actives: [
+                { id: "active_ix", name: "KLASA IX", code: "IX", order: 1 },
+                { id: "active_viii", name: "KLASA VIII", code: "VIII", order: 2 },
+                { id: "active_vii", name: "KLASA VII", code: "VII", order: 3 },
+                { id: "active_vi", name: "KLASA VI", code: "VI", order: 4 }
+            ],
+            adminPassword: "admin123",
+            curriculum: { weeksSem1: 16, weeksSem2: 21 },
+            holidays: [],
+            semesterDates: {
+                schoolStart: "2025-09-01",
+                schoolEnd: "2026-06-15",
+                semester1Start: "2025-09-01",
+                semester1End: "2025-12-20",
+                semester2Start: "2026-01-10",
+                semester2End: "2026-06-15"
+            },
+            appVersion: APP_VERSION
+        };
+        
+        initializeDemoData();
+    }
+    
+    function performLogin() { 
+        let u = document.getElementById('username').value;
+        let p = document.getElementById('password').value;
+        
+        if(u === 'admin' && p === systemData.adminPassword) { 
+            currentUser = {id:'admin', name:'Administratori', role:'admin'}; 
+            showMainApp(); 
+            return; 
+        } 
+        
+        let teacher = systemData.teachers.find(t => t.username === u && t.password === p); 
+        if(teacher) { 
+            currentUser = {id:teacher.id, name:teacher.name, role:'teacher', classId:teacher.classId}; 
+            showMainApp(); 
+            return; 
+        } 
+        
+        alert("Përdoruesi ose fjalëkalimi është i gabuar!"); 
+    }
+    
+    function showAdminLogin() { 
+        document.getElementById('username').value='admin'; 
+        document.getElementById('password').value=''; 
+        document.getElementById('password').focus(); 
+    }
+    
+    function showMainApp() { 
+        document.getElementById('loginContainer').classList.add('hidden'); 
+        document.getElementById('mainContainer').classList.remove('hidden'); 
+        refreshDisplay(); 
+    }
+    
+    function logout() { 
+        currentUser=null; 
+        window.viewingClassId=null; 
+        selectedActiveFilter=null; 
+        document.getElementById('loginContainer').classList.remove('hidden'); 
+        document.getElementById('mainContainer').classList.add('hidden'); 
+        document.getElementById('username').value=''; 
+        document.getElementById('password').value=''; 
+    }
+    
+    function showNotification(msg) { 
+        let d=document.createElement('div'); 
+        d.className='notification'; 
+        d.innerText='✅ '+msg; 
+        document.body.appendChild(d); 
+        setTimeout(()=>d.remove(),2500); 
+    }
+    
+    function escapeHtml(str) { 
+        if(!str) return ''; 
+        return String(str).replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':m==='>'?'&gt;':m); 
+    }
+    
+    function saveToLocal() { 
+        localStorage.setItem('schoolSystemFinalV3', JSON.stringify(systemData)); 
+    }
+    
+    function checkAndMigrateData() {
+        let data = localStorage.getItem('schoolSystemFinalV3');
+        if(data) {
+            try {
+                let oldData = JSON.parse(data);
+                if(!oldData.appVersion || oldData.appVersion !== APP_VERSION || (oldData.classes && oldData.classes.length !== 24)) {
+                    console.log("Version i vjetër i sistemit. Rivendosja e të dhënave...");
+                    resetToDefaultData();
+                    return true;
+                }
+            } catch(e) {
+                console.error("Gabim në kontrollimin e versionit", e);
+                resetToDefaultData();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function loadFromLocal() { 
+        let migrated = checkAndMigrateData();
+        if(migrated) {
+            refreshDisplay();
+            return;
+        }
+        
+        let data = localStorage.getItem('schoolSystemFinalV3'); 
+        if(data) { 
+            systemData = JSON.parse(data); 
+            if(!systemData.adminPassword) systemData.adminPassword = "admin123"; 
+            if(!systemData.actives) systemData.actives = [ 
+                { id: "active_ix", name: "KLASA IX", code: "IX", order: 1 }, 
+                { id: "active_viii", name: "KLASA VIII", code: "VIII", order: 2 }, 
+                { id: "active_vii", name: "KLASA VII", code: "VII", order: 3 }, 
+                { id: "active_vi", name: "KLASA VI", code: "VI", order: 4 } 
+            ]; 
+            if(!systemData.curriculum) systemData.curriculum = { weeksSem1: 16, weeksSem2: 21 }; 
+            if(!systemData.holidays) systemData.holidays = []; 
+            if(!systemData.semesterDates) systemData.semesterDates = { 
+                schoolStart: "2025-09-01", 
+                schoolEnd: "2026-06-15", 
+                semester1Start: "2025-09-01", 
+                semester1End: "2025-12-20", 
+                semester2Start: "2026-01-10", 
+                semester2End: "2026-06-15" 
+            }; 
+            systemData.classes.forEach(cls => {
+                cls.students.forEach(s => {
+                    if(!s.behavior) s.behavior = 'Shembullore';
+                });
+            });
+            systemData.appVersion = APP_VERSION;
+        } else { 
+            initializeDemoData(); 
+        } 
+        refreshDisplay(); 
+    }
+    
+    function initializeDemoData() { 
+        systemData.teachers=[]; 
+        systemData.classes=[]; 
+        systemData.adminPassword = "admin123"; 
+        systemData.actives = [ 
+            { id: "active_ix", name: "KLASA IX", code: "IX", order: 1 }, 
+            { id: "active_viii", name: "KLASA VIII", code: "VIII", order: 2 }, 
+            { id: "active_vii", name: "KLASA VII", code: "VII", order: 3 }, 
+            { id: "active_vi", name: "KLASA VI", code: "VI", order: 4 } 
+        ];
+        systemData.holidays = [];
+        systemData.curriculum = { weeksSem1: 16, weeksSem2: 21 };
+        systemData.semesterDates = { schoolStart: "2025-09-01", schoolEnd: "2026-06-15", semester1Start: "2025-09-01", semester1End: "2025-12-20", semester2Start: "2026-01-10", semester2End: "2026-06-15" };
+        systemData.appVersion = APP_VERSION;
+        
+        const classConfigs = [
+            { name: "IX-1", activeId: "active_ix", teacherName: "Ekrem Brati", teacherUsername: "kujdestari_ix1", teacherPass: "pass123" },
+            { name: "IX-2", activeId: "active_ix", teacherName: "Artan Kyqyku", teacherUsername: "kujdestari_ix2", teacherPass: "pass123" },
+            { name: "IX-3", activeId: "active_ix", teacherName: "Hamit Guri", teacherUsername: "kujdestari_ix3", teacherPass: "pass123" },
+            { name: "IX-4", activeId: "active_ix", teacherName: "Ilire Raka", teacherUsername: "kujdestari_ix4", teacherPass: "pass123" },
+            { name: "IX-5", activeId: "active_ix", teacherName: "Teuta Brruti", teacherUsername: "kujdestari_ix5", teacherPass: "pass123" },
+            { name: "IX-6", activeId: "active_ix", teacherName: "Nebajete Guri", teacherUsername: "kujdestari_ix6", teacherPass: "pass123" },
+            { name: "VIII-1", activeId: "active_viii", teacherName: "Arif Mulaku", teacherUsername: "kujdestari_viii1", teacherPass: "pass123" },
+            { name: "VIII-2", activeId: "active_viii", teacherName: "Isamedin Lika", teacherUsername: "kujdestari_viii2", teacherPass: "pass123" },
+            { name: "VIII-3", activeId: "active_viii", teacherName: "Afërdita Kuka", teacherUsername: "kujdestari_viii3", teacherPass: "pass123" },
+            { name: "VIII-4", activeId: "active_viii", teacherName: "Doruntina Luta", teacherUsername: "kujdestari_viii4", teacherPass: "pass123" },
+            { name: "VIII-5", activeId: "active_viii", teacherName: "Vahide Hashani", teacherUsername: "kujdestari_viii5", teacherPass: "pass123" },
+            { name: "VIII-6", activeId: "active_viii", teacherName: "Miradije Dogani", teacherUsername: "kujdestari_viii6", teacherPass: "pass123" },
+            { name: "VII-1", activeId: "active_vii", teacherName: "Arlinda Koxha", teacherUsername: "kujdestari_vii1", teacherPass: "pass123" },
+            { name: "VII-2", activeId: "active_vii", teacherName: "Hyrije Kamishi", teacherUsername: "kujdestari_vii2", teacherPass: "pass123" },
+            { name: "VII-3", activeId: "active_vii", teacherName: "Rejhane Tifeku", teacherUsername: "kujdestari_vii3", teacherPass: "pass123" },
+            { name: "VII-4", activeId: "active_vii", teacherName: "Fadil Koka", teacherUsername: "kujdestari_vii4", teacherPass: "pass123" },
+            { name: "VII-5", activeId: "active_vii", teacherName: "Mehmet Vlashi", teacherUsername: "kujdestari_vii5", teacherPass: "pass123" },
+            { name: "VII-6", activeId: "active_vii", teacherName: "Ajshe Brruti", teacherUsername: "kujdestari_vii6", teacherPass: "pass123" },
+            { name: "VI-1", activeId: "active_vi", teacherName: "Flamur Berisha", teacherUsername: "kujdestari_vi1", teacherPass: "pass123" },
+            { name: "VI-2", activeId: "active_vi", teacherName: "Arbesa Raka", teacherUsername: "kujdestari_vi2", teacherPass: "pass123" },
+            { name: "VI-3", activeId: "active_vi", teacherName: "Avni Raka", teacherUsername: "kujdestari_vi3", teacherPass: "pass123" },
+            { name: "VI-4", activeId: "active_vi", teacherName: "Xhemile Bela", teacherUsername: "kujdestari_vi4", teacherPass: "pass123" },
+            { name: "VI-5", activeId: "active_vi", teacherName: "Amira Islami", teacherUsername: "kujdestari_vi5", teacherPass: "pass123" },
+            { name: "VI-6", activeId: "active_vi", teacherName: "Ibadete Dervishi", teacherUsername: "kujdestari_vi6", teacherPass: "pass123" }
+        ];
+        
+        for(let i=0; i<classConfigs.length; i++) {
+            let cfg = classConfigs[i];
+            let cls = createClass(cfg.name, null, cfg.activeId);
+            systemData.classes.push(cls);
+            let teacher = {
+                id: 'teacher_' + Date.now() + '_' + i,
+                name: cfg.teacherName,
+                username: cfg.teacherUsername,
+                password: cfg.teacherPass,
+                classId: cls.id,
+                role: 'teacher'
+            };
+            systemData.teachers.push(teacher);
+            cls.teacherId = teacher.id;
+        }
+        
+        saveToLocal(); 
+    }
+    
+    // ========== FUNKSIONET PËR STATISTIKA DHE PRINTIM ==========
+    function showClassStats(classObj) {
+        let stats = getClassStats(classObj, currentSemesterView);
+        let semesterName = currentSemesterView === 'semester1' ? 'Gjysmevjetori I' : (currentSemesterView === 'semester2' ? 'Gjysmevjetori II' : 'Perfundimtar');
+        let html = '<h3>' + classObj.className + ' - ' + semesterName + '</h3>';
+        html += '<table class="stats-modal-table" style="width:100%;">';
+        html += '<thead><tr style="background:#0b4b6e; color:white;">';
+        html += '<th rowspan="2">Lenda</th>';
+        html += '<th colspan="5">Nota 5</th><th colspan="5">Nota 4</th><th colspan="5">Nota 3</th><th colspan="5">Nota 2</th><th colspan="5">Nota 1</th>';
+        html += '<th rowspan="2">Mesatarja</th></tr>';
+        html += '<tr style="background:#0b4b6e; color:white;">';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '</tr></thead><tbody>';
+        
+        let totalMale = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+        let totalFemale = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+        
+        stats.subjectStats.forEach(sub => {
+            totalMale[1] += sub.male[1]; totalMale[2] += sub.male[2]; totalMale[3] += sub.male[3]; totalMale[4] += sub.male[4]; totalMale[5] += sub.male[5];
+            totalMale.total += sub.male.total; totalMale.sum += parseFloat(sub.male.avg) * sub.male.total;
+            totalFemale[1] += sub.female[1]; totalFemale[2] += sub.female[2]; totalFemale[3] += sub.female[3]; totalFemale[4] += sub.female[4]; totalFemale[5] += sub.female[5];
+            totalFemale.total += sub.female.total; totalFemale.sum += parseFloat(sub.female.avg) * sub.female.total;
+            let totalStudents = sub.total.total;
+            html += `<tr>
+                <td><strong>${sub.subjectName}</strong></td>
+                <td>${sub.male[5]}${nbsp}</td><td>${sub.female[5]}${nbsp}</td><td>${sub.total[5]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[5]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[4]}${nbsp}</td><td>${sub.female[4]}${nbsp}</td><td>${sub.total[4]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[4]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[3]}${nbsp}</td><td>${sub.female[3]}${nbsp}</td><td>${sub.total[3]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[3]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[2]}${nbsp}</td><td>${sub.female[2]}${nbsp}</td><td>${sub.total[2]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[2]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[1]}${nbsp}</td><td>${sub.female[1]}${nbsp}</td><td>${sub.total[1]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[1]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td><strong>${sub.total.avg}</strong></td>
+            </tr>`;
+        });
+        
+        let overallMaleAvg = totalMale.total > 0 ? (totalMale.sum / totalMale.total).toFixed(2) : '0.00';
+        let overallFemaleAvg = totalFemale.total > 0 ? (totalFemale.sum / totalFemale.total).toFixed(2) : '0.00';
+        let overallTotalAvg = (totalMale.sum + totalFemale.sum) / (totalMale.total + totalFemale.total) || 0;
+        
+        html += `<tr style="background:#e8f0fe; font-weight:bold;">
+            <td><strong>MESATARJA E PËRGJITHSHME</strong></td>
+            <td colspan="5"><strong>M: ${overallMaleAvg}</strong></td><td colspan="5"><strong>F: ${overallFemaleAvg}</strong></td>
+            <td colspan="5"><strong>GJ: ${overallTotalAvg.toFixed(2)}</strong></td><td colspan="5">${nbsp}</td><td colspan="5">${nbsp}</td><td><strong>${overallTotalAvg.toFixed(2)}</strong></td>
+        </tr>`;
+        
+        html += '</tbody></table>';
+        document.getElementById('statsModalTitle').innerHTML = 'Statistikat e Klases - ' + classObj.className;
+        document.getElementById('statsModalContent').innerHTML = html;
+        document.getElementById('statsModal').style.display = 'block';
+    }
+    
+    function printStatsModal() {
+        let content = document.getElementById('statsModalContent').innerHTML;
+        let title = document.getElementById('statsModalTitle').innerHTML;
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + title + '</title>';
+        printHtml += '<style>body{font-family:Arial;margin:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #000;padding:4px 2px;text-align:center;} th{background:#0b4b6e;color:white;}</style>';
+        printHtml += '</head><body>';
+        printHtml += '<div class="report-container"><div class="report-header"><div class="report-title">' + title + '</div>';
+        printHtml += '<div class="report-subtitle">Data: ' + formatDate() + '</div></div>';
+        printHtml += content;
+        printHtml += '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function showGlobalStats() {
+        let active = systemData.actives.find(a => a.id === selectedActiveFilter);
+        let activeName = active ? active.name : "TE GJITHA KLASAT";
+        let globalStats = getGlobalStats(currentSemesterView, selectedActiveFilter);
+        let semesterName = currentSemesterView === 'semester1' ? 'Gjysmevjetori I' : (currentSemesterView === 'semester2' ? 'Gjysmevjetori II' : 'Perfundimtar');
+        let html = '<h3>' + activeName + ' - ' + semesterName + '</h3>';
+        html += '<table class="stats-modal-table" style="width:100%;">';
+        html += '<thead><tr style="background:#0b4b6e; color:white;">';
+        html += '<th rowspan="2">Lenda</th>';
+        html += '<th colspan="5">Nota 5</th><th colspan="5">Nota 4</th><th colspan="5">Nota 3</th><th colspan="5">Nota 2</th><th colspan="5">Nota 1</th>';
+        html += '<th rowspan="2">Mesatarja</th></tr>';
+        html += '<tr style="background:#0b4b6e; color:white;">';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '<th>M</th><th>F</th><th>Gj</th><th>%</th><th></th>';
+        html += '</tr></thead><tbody>';
+        
+        let totalMale = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+        let totalFemale = {1:0,2:0,3:0,4:0,5:0, total:0, sum:0};
+        
+        globalStats.subjectStats.forEach(sub => {
+            totalMale[1] += sub.male[1]; totalMale[2] += sub.male[2]; totalMale[3] += sub.male[3]; totalMale[4] += sub.male[4]; totalMale[5] += sub.male[5];
+            totalMale.total += sub.male.total; totalMale.sum += parseFloat(sub.male.avg) * sub.male.total;
+            totalFemale[1] += sub.female[1]; totalFemale[2] += sub.female[2]; totalFemale[3] += sub.female[3]; totalFemale[4] += sub.female[4]; totalFemale[5] += sub.female[5];
+            totalFemale.total += sub.female.total; totalFemale.sum += parseFloat(sub.female.avg) * sub.female.total;
+            let totalStudents = sub.total.total;
+            html += `<tr>
+                <td><strong>${sub.subjectName}</strong></td>
+                <td>${sub.male[5]}${nbsp}</td><td>${sub.female[5]}${nbsp}</td><td>${sub.total[5]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[5]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[4]}${nbsp}</td><td>${sub.female[4]}${nbsp}</td><td>${sub.total[4]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[4]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[3]}${nbsp}</td><td>${sub.female[3]}${nbsp}</td><td>${sub.total[3]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[3]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[2]}${nbsp}</td><td>${sub.female[2]}${nbsp}</td><td>${sub.total[2]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[2]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td>${sub.male[1]}${nbsp}</td><td>${sub.female[1]}${nbsp}</td><td>${sub.total[1]}${nbsp}</td><td>${totalStudents > 0 ? ((sub.total[1]/totalStudents)*100).toFixed(1) : '0'}%${nbsp}</td><td>${nbsp}</td>
+                <td><strong>${sub.total.avg}</strong></td>
+            </tr>`;
+        });
+        
+        let overallMaleAvg = totalMale.total > 0 ? (totalMale.sum / totalMale.total).toFixed(2) : '0.00';
+        let overallFemaleAvg = totalFemale.total > 0 ? (totalFemale.sum / totalFemale.total).toFixed(2) : '0.00';
+        let overallTotalAvg = (totalMale.sum + totalFemale.sum) / (totalMale.total + totalFemale.total) || 0;
+        
+        html += `<tr style="background:#e8f0fe; font-weight:bold;">
+            <td><strong>MESATARJA E PËRGJITHSHME</strong></td>
+            <td colspan="5"><strong>M: ${overallMaleAvg}</strong></td><td colspan="5"><strong>F: ${overallFemaleAvg}</strong></td>
+            <td colspan="5"><strong>GJ: ${overallTotalAvg.toFixed(2)}</strong></td><td colspan="5">${nbsp}</td><td colspan="5">${nbsp}</td><td><strong>${overallTotalAvg.toFixed(2)}</strong></td>
+        </tr>`;
+        
+        html += '</tbody></table>';
+        document.getElementById('statsModalTitle').innerHTML = 'Statistikat e Pergjithshme - ' + activeName;
+        document.getElementById('statsModalContent').innerHTML = html;
+        document.getElementById('statsModal').style.display = 'block';
+    }
+    
+    function closeStatsModal() { document.getElementById('statsModal').style.display = 'none'; }
+    
+    function printDirectorReport() {
+        let active = systemData.actives.find(a => a.id === selectedActiveFilter);
+        let activeName = active ? active.name : "TE GJITHA KLASAT";
+        let globalStats = getGlobalStats(currentSemesterView, selectedActiveFilter);
+        let semesterName = currentSemesterView === 'semester1' ? 'GJYSMEVJETORI I' : (currentSemesterView === 'semester2' ? 'GJYSMEVJETORI II' : 'PERFUNDIMTAR');
+        let date = formatDate();
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rezultatet e Drejtorise - ' + activeName + '</title>';
+        printHtml += '<style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:8mm;border-bottom:2px solid #0b4b6e;padding-bottom:4mm;} .report-title{font-size:22px;font-weight:bold;color:#0b4b6e;} .report-subtitle{font-size:14px;margin-top:2mm;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #333;padding:3px 4px;text-align:center;font-size:10px;} th{background:#0b4b6e;color:white;} .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin:4mm 0;} .stat-card{padding:3mm;border:1px solid #ddd;border-radius:4px;} .stat-value{font-size:20px;font-weight:bold;color:#0b4b6e;} .signature-line{display:flex;justify-content:space-between;margin-top:10mm;padding-top:5mm;border-top:1px solid #333;} .signature{text-align:center;width:140px;}</style>';
+        printHtml += '</head><body><div class="report-container">';
+        printHtml += '<div class="report-header"><div class="report-title">REZULTATET E DREJTORISE</div>';
+        printHtml += '<div class="report-subtitle">' + systemData.schoolInfo.name + '</div>';
+        printHtml += '<div class="report-subtitle">Aktivi: ' + activeName + ' | Periudha: ' + semesterName + ' | Viti: ' + systemData.schoolInfo.year + '</div>';
+        printHtml += '<div class="report-subtitle">Data: ' + date + '</div>';
+        printHtml += '<div class="report-subtitle"><strong>Drejtori: ' + systemData.schoolInfo.principal + '</strong></div></div>';
+        
+        printHtml += '<div class="stats-grid">';
+        printHtml += '<div class="stat-card"><strong>Total Klasa</strong><div class="stat-value">' + globalStats.classesStats.length + '</div></div>';
+        printHtml += '<div class="stat-card"><strong>Total Nxenes</strong><div class="stat-value">' + globalStats.totalStudents + '</div><div>' + globalStats.totalMale + ' D | ' + globalStats.totalFemale + ' V</div></div>';
+        printHtml += '<div class="stat-card"><strong>Mesatarja</strong><div class="stat-value">' + globalStats.overallAvg + '</div></div>';
+        printHtml += '<div class="stat-card"><strong>Nxenes me Nota 1</strong><div class="stat-value">' + (globalStats.weakOnes.one + globalStats.weakOnes.two + globalStats.weakOnes.threePlus) + '</div></div>';
+        printHtml += '</div>';
+        
+        printHtml += '<div><strong>MUNGESAT:</strong> Me arsye: ' + globalStats.totalAbsencesWR + ' | Pa arsye: ' + globalStats.totalAbsencesWOR + ' | Gjithsej: ' + (globalStats.totalAbsencesWR + globalStats.totalAbsencesWOR) + '</div>';
+        
+        printHtml += '<table><thead><th>Klasa</th><th>Nxenes</th><th>Mes.</th><th>Shkelq.</th><th>Sh.mire</th><th>Mire</th><th>Mjaft.</th><th>Pamj.</th><th>Mung.Total</th><th>Nota1</th></thead><tbody>';
+        globalStats.classesStats.forEach(c => {
+            printHtml += '<tr><td><strong>' + c.className + '</strong></td><td>' + c.total + '</td><td><strong>' + c.classAvg + '</strong></td><td>' + c.categories.excellent + '</td><td>' + c.categories.verygood + '</td><td>' + c.categories.good + '</td><td>' + c.categories.sufficient + '</td><td>' + c.categories.fail + '</td><td>' + c.totalAbsences + '</td><td>' + (c.weakOnes.one + c.weakOnes.two + c.weakOnes.threePlus) + '</td></tr>';
+        });
+        printHtml += '</tbody></table>';
+        
+        printHtml += '<div class="signature-line"><div class="signature"><div style="border-top:1px solid #333;margin-top:6mm;padding-top:2mm;">Drejtori: ' + systemData.schoolInfo.principal + '</div></div>';
+        printHtml += '<div class="signature"><div style="border-top:1px solid #333;margin-top:6mm;padding-top:2mm;">Vula e shkolles</div></div></div>';
+        printHtml += '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printGlobalReport(semester) { printDirectorReport(); }
+    function printClassReportById(classId, semester) { let cls = systemData.classes.find(c => c.id === classId); if(cls) printClassReport(cls, semester); }
+    
+    function printClassReport(classObj, semester) {
+        let stats = getClassStats(classObj, semester);
+        let semesterName = semester === 'semester1' ? 'GJYSMEVJETORI I' : (semester === 'semester2' ? 'GJYSMEVJETORI II' : 'PERFUNDIMTAR');
+        let date = formatDate();
+        let studentsHtml = '<table style="width:100%;border-collapse:collapse;font-size:8px;"><thead><tr style="background:#0b4b6e;color:white;"><th>#</th><th>Emri</th><th>Gj</th>';
+        classObj.subjectsOrder.forEach(s => studentsHtml += '<th>' + s.code + '</th>');
+        studentsHtml += '<th>Mes.</th><th>Statusi</th><th>Mung.Total</th><th>Nota1</th><th>Sjellja</th><tr></thead><tbody>';
+        classObj.students.forEach(s => {
+            let avg = getStudentAvg(s, classObj.subjectsOrder, semester);
+            let cat = getSuccessCategory(s, classObj.subjectsOrder, semester);
+            let catText = cat === 'excellent' ? 'Shkelq.' : cat === 'verygood' ? 'Sh.mire' : cat === 'good' ? 'Mire' : cat === 'sufficient' ? 'Mjaft.' : cat === 'fail' ? 'Pamj.' : 'Panot.';
+            let abs = getTotalAbsences(s, semester);
+            let ones = countOnes(s, classObj.subjectsOrder, semester);
+            let behavior = s.behavior || 'Shembullore';
+            studentsHtml += '<tr><td>' + s.id + '</td><td>' + escapeHtml(s.name) + '</td><td>' + s.gender + '</td>';
+            classObj.subjectsOrder.forEach(sub => {
+                let gradeVal = getStudentGradeForSemester(s, sub.key, semester);
+                studentsHtml += '<td>' + (gradeVal || '-') + '</td>';
+            });
+            studentsHtml += '<td><strong>' + avg + '</strong></td><td>' + catText + '</td><td>' + abs.total + '</td><td>' + ones + '</td><td>' + behavior + '</td></tr>';
+        });
+        studentsHtml += '</tbody></table>';
+        let teacher = systemData.teachers.find(t => t.classId === classObj.id);
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + classObj.className + ' - ' + semesterName + '</title>';
+        printHtml += '<style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:6mm;border-bottom:2px solid #0b4b6e;padding-bottom:3mm;} .report-title{font-size:20px;font-weight:bold;color:#0b4b6e;} .report-subtitle{font-size:12px;margin-top:1mm;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #000;padding:2px 3px;text-align:center;font-size:9px;} th{background:#0b4b6e;color:white;} .summary-box{margin:4mm 0;padding:3mm;background:#f5f5f5;} .signature-line{display:flex;justify-content:space-between;margin-top:8mm;padding-top:4mm;border-top:1px solid #333;}</style>';
+        printHtml += '</head><body><div class="report-container">';
+        printHtml += '<div class="report-header"><div class="report-title">RAPORTI I KLASES</div>';
+        printHtml += '<div class="report-subtitle">' + classObj.className + ' - ' + semesterName + '</div>';
+        printHtml += '<div class="report-subtitle">' + systemData.schoolInfo.name + ' | Viti: ' + systemData.schoolInfo.year + '</div>';
+        printHtml += '<div class="report-subtitle">Data: ' + date + '</div></div>';
+        printHtml += studentsHtml;
+        printHtml += '<div class="summary-box"><strong>PËRMBLEDHJE:</strong> Total Nxenes: ' + stats.total + ' | Mesatarja: ' + stats.classAvg + ' | Shkelqyeshem: ' + stats.categories.excellent + ' (' + (stats.total > 0 ? ((stats.categories.excellent / stats.total) * 100).toFixed(1) : '0') + '%) | Shume mire: ' + stats.categories.verygood + ' (' + (stats.total > 0 ? ((stats.categories.verygood / stats.total) * 100).toFixed(1) : '0') + '%) | Mire: ' + stats.categories.good + ' (' + (stats.total > 0 ? ((stats.categories.good / stats.total) * 100).toFixed(1) : '0') + '%) | Mjaftueshem: ' + stats.categories.sufficient + ' (' + (stats.total > 0 ? ((stats.categories.sufficient / stats.total) * 100).toFixed(1) : '0') + '%) | Pamjaftueshem: ' + stats.categories.fail + ' (' + (stats.total > 0 ? ((stats.categories.fail / stats.total) * 100).toFixed(1) : '0') + '%) | Mungesat: ' + stats.totalAbsences + ' (M/A:' + stats.totalWR + ', M/PA:' + stats.totalWOR + ')</div>';
+        printHtml += '<div class="signature-line"><div class="signature"><div style="border-top:1px solid #333;margin-top:5mm;padding-top:1mm;width:140px;">Kujdestari: ' + (teacher ? teacher.name : '_______________') + '</div></div>';
+        printHtml += '<div class="signature"><div style="border-top:1px solid #333;margin-top:5mm;padding-top:1mm;width:140px;">Drejtori: ' + systemData.schoolInfo.principal + '</div></div></div>';
+        printHtml += '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printCurrentClassReport() { let cls = getCurrentClass(); if(cls) printClassReport(cls, currentSemesterView); }
+    
+    // Funksioni i përmirësuar për printimin e deftesës - tabela e rregulluar
+    function printStudentCertificate(classObj, student, semester) {
+        let semesterName = semester === 'semester1' ? 'GJYSMEVJETORI I' : (semester === 'semester2' ? 'GJYSMEVJETORI II' : 'PERFUNDIMTAR');
+        let avg = getStudentAvg(student, classObj.subjectsOrder, semester);
+        let successDesc = getSuccessDescription(avg);
+        let abs = getTotalAbsences(student, semester);
+        let hasOne = hasAnyOne(student, classObj.subjectsOrder, semester);
+        let onesCount = countOnes(student, classObj.subjectsOrder, semester);
+        let behavior = student.behavior || 'Shembullore';
+        let date = formatDate();
+        let subjectsHtml = '';
+        classObj.subjectsOrder.forEach(sub => {
+            let gradeVal = getStudentGradeForSemester(student, sub.key, semester);
+            let gradeNum = gradeVal || 0;
+            let gradeDesc = gradeNum === 5 ? 'Shkelqyeshem' : gradeNum === 4 ? 'Shume mire' : gradeNum === 3 ? 'Mire' : gradeNum === 2 ? 'Mjaftueshem' : gradeNum === 1 ? 'Pamjaftueshem' : 'I panotuar';
+            subjectsHtml += `<tr><td style="padding:4px 6px;">${sub.name}</td><td style="padding:4px 6px;"><strong>${gradeVal || '-'}</strong></td><td style="padding:4px 6px;">${gradeDesc}</td></tr>`;
+        });
+        
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deftesa - ' + student.name + '</title>';
+        printHtml += '<style>*{margin:0;padding:0;box-sizing:border-box;} body{background:white;font-family:"Times New Roman", Times, serif;margin:0;padding:0;width:210mm;} .certificate{width:210mm;min-height:297mm;background:white;padding:12mm 15mm;margin:0 auto;border:2px solid #d4af37;box-sizing:border-box;page-break-after:avoid;page-break-inside:avoid;} .certificate-header{text-align:center;margin-bottom:8mm;border-bottom:2px solid #0b4b6e;padding-bottom:5mm;} .certificate-title{font-size:28px;font-weight:bold;color:#d4af37;margin:3mm 0;letter-spacing:2px;} .certificate-subtitle{font-size:18px;font-weight:bold;color:#0b4b6e;} .certificate-school{font-size:16px;font-weight:bold;color:#0b4b6e;} .certificate-student{font-size:22px;font-weight:bold;text-align:center;margin:8mm 0;padding:5mm;border-bottom:1px dashed #999;border-top:1px dashed #999;background:#f5f5f5;} .certificate-info{display:flex;justify-content:space-between;margin:5mm 0;font-size:12px;flex-wrap:wrap;gap:10px;} table{width:100%;border-collapse:collapse;margin:5mm 0;} th,td{border:1px solid #333;padding:4px 6px;text-align:center;font-size:11px;} th{background:#0b4b6e;color:white;font-weight:bold;} .certificate-avg-box{background:#e8f5e9;padding:4mm;text-align:center;border-radius:8px;margin:5mm 0;} .certificate-avg-value{font-size:28px;font-weight:bold;color:#2e7d32;} .certificate-absences-box{background:#fff3e0;padding:4mm;margin:5mm 0;border-radius:8px;} .certificate-signatures{display:flex;justify-content:space-between;margin-top:10mm;padding-top:5mm;border-top:1px solid #333;} .certificate-signature{text-align:center;width:140px;} .certificate-signature-line{border-top:1px solid #333;margin-top:8mm;padding-top:2mm;} @media print{body{margin:0;padding:0;} .certificate{page-break-after:avoid;page-break-inside:avoid;margin:0;padding:12mm 15mm;}}</style>';
+        printHtml += '</head><body><div class="certificate">';
+        printHtml += '<div class="certificate-header">';
+        printHtml += '<div class="certificate-subtitle">REPUBLIKA E KOSOVES</div>';
+        printHtml += '<div class="certificate-school">' + systemData.schoolInfo.name + '</div>';
+        printHtml += '<div class="certificate-title">DEFTESA E SUKSESIT</div></div>';
+        printHtml += '<div class="certificate-student">' + escapeHtml(student.name) + '</div>';
+        printHtml += '<div class="certificate-info"><div><strong>Klasa:</strong> ' + classObj.className + '</div><div><strong>Viti:</strong> ' + systemData.schoolInfo.year + '</div></div>';
+        printHtml += '<div class="certificate-info"><div><strong>Periudha:</strong> ' + semesterName + '</div><div><strong>Data:</strong> ' + date + '</div></div>';
+        printHtml += '<div style="margin:3mm 0;font-size:11px;"><strong>Sjellja:</strong> ' + behavior + '</div>';
+        printHtml += '<table><thead><tr style="background:#0b4b6e;color:white;"><th>Lenda</th><th>Nota</th><th>Pershkrimi</th></tr></thead><tbody>' + subjectsHtml + '</tbody></table>';
+        printHtml += '<div class="certificate-avg-box"><div class="certificate-avg-value">' + avg + '</div><div>Mesatarja: ' + successDesc + '</div>' + (hasOne ? '<div style="color:#c62828;font-size:10px;">Ka ' + onesCount + ' note/nota 1</div>' : '') + '</div>';
+        printHtml += '<div class="certificate-absences-box"><strong>MUNGESAT</strong><div style="display:flex;justify-content:space-between;margin-top:2mm;font-size:10px;"><span>Me arsye: ' + abs.withReason + '</span><span>Pa arsye: ' + abs.withoutReason + '</span><span><strong>Gjithsej: ' + abs.total + '</strong></span></div></div>';
+        printHtml += '<div class="certificate-signatures"><div class="certificate-signature"><div class="certificate-signature-line">Kujdestari</div><div style="font-size:10px;margin-top:2mm;">' + (systemData.teachers.find(t => t.classId === classObj.id)?.name || '__________________') + '</div></div>';
+        printHtml += '<div class="certificate-signature"><div class="certificate-signature-line">Drejtori</div><div style="font-size:10px;margin-top:2mm;">' + systemData.schoolInfo.principal + '</div></div>';
+        printHtml += '<div class="certificate-signature"><div class="certificate-signature-line">Vula</div></div></div></div></body></html>';
+        
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printClassCertificates(className) {
+        let classObj = systemData.classes.find(c => c.className === className);
+        if (!classObj) return;
+        let semester = currentSemesterView;
+        let semesterName = semester === 'semester1' ? 'GJYSMEVJETORI I' : (semester === 'semester2' ? 'GJYSMEVJETORI II' : 'PERFUNDIMTAR');
+        let date = formatDate();
+        let allHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Deftesat - ' + className + '</title><style>@media print{.page-break{page-break-before:always;}} *{margin:0;padding:0;box-sizing:border-box;} body{background:white;font-family:"Times New Roman", Times, serif;margin:0;padding:0;width:210mm;} .certificate{width:210mm;min-height:297mm;background:white;padding:12mm 15mm;margin:0 auto;border:2px solid #d4af37;box-sizing:border-box;page-break-after:avoid;page-break-inside:avoid;} .certificate-header{text-align:center;margin-bottom:8mm;border-bottom:2px solid #0b4b6e;padding-bottom:5mm;} .certificate-title{font-size:28px;font-weight:bold;color:#d4af37;margin:3mm 0;letter-spacing:2px;} .certificate-subtitle{font-size:18px;font-weight:bold;color:#0b4b6e;} .certificate-school{font-size:16px;font-weight:bold;color:#0b4b6e;} .certificate-student{font-size:22px;font-weight:bold;text-align:center;margin:8mm 0;padding:5mm;border-bottom:1px dashed #999;border-top:1px dashed #999;background:#f5f5f5;} .certificate-info{display:flex;justify-content:space-between;margin:5mm 0;font-size:12px;flex-wrap:wrap;gap:10px;} table{width:100%;border-collapse:collapse;margin:5mm 0;} th,td{border:1px solid #333;padding:4px 6px;text-align:center;font-size:11px;} th{background:#0b4b6e;color:white;font-weight:bold;} .certificate-avg-box{background:#e8f5e9;padding:4mm;text-align:center;border-radius:8px;margin:5mm 0;} .certificate-avg-value{font-size:28px;font-weight:bold;color:#2e7d32;} .certificate-absences-box{background:#fff3e0;padding:4mm;margin:5mm 0;border-radius:8px;} .certificate-signatures{display:flex;justify-content:space-between;margin-top:10mm;padding-top:5mm;border-top:1px solid #333;} .certificate-signature{text-align:center;width:140px;} .certificate-signature-line{border-top:1px solid #333;margin-top:8mm;padding-top:2mm;} @media print{body{margin:0;padding:0;} .certificate{page-break-after:avoid;page-break-inside:avoid;margin:0;padding:12mm 15mm;}}</style></head><body>';
+        
+        classObj.students.forEach((student, idx) => {
+            let avg = getStudentAvg(student, classObj.subjectsOrder, semester);
+            let successDesc = getSuccessDescription(avg);
+            let abs = getTotalAbsences(student, semester);
+            let hasOne = hasAnyOne(student, classObj.subjectsOrder, semester);
+            let onesCount = countOnes(student, classObj.subjectsOrder, semester);
+            let behavior = student.behavior || 'Shembullore';
+            let subjectsHtml = '';
+            classObj.subjectsOrder.forEach(sub => {
+                let gradeVal = getStudentGradeForSemester(student, sub.key, semester);
+                let gradeNum = gradeVal || 0;
+                let gradeDesc = gradeNum === 5 ? 'Shkelqyeshem' : gradeNum === 4 ? 'Shume mire' : gradeNum === 3 ? 'Mire' : gradeNum === 2 ? 'Mjaftueshem' : gradeNum === 1 ? 'Pamjaftueshem' : 'I panotuar';
+                subjectsHtml += `<tr><td style="padding:4px 6px;">${sub.name}</td><td style="padding:4px 6px;"><strong>${gradeVal || '-'}</strong></td><td style="padding:4px 6px;">${gradeDesc}</td></tr>`;
+            });
+            allHtml += '<div class="certificate" style="' + (idx > 0 ? 'page-break-before:always;' : '') + '">';
+            allHtml += '<div class="certificate-header">';
+            allHtml += '<div class="certificate-subtitle">REPUBLIKA E KOSOVES</div>';
+            allHtml += '<div class="certificate-school">' + systemData.schoolInfo.name + '</div>';
+            allHtml += '<div class="certificate-title">DEFTESA E SUKSESIT</div></div>';
+            allHtml += '<div class="certificate-student">' + escapeHtml(student.name) + '</div>';
+            allHtml += '<div class="certificate-info"><div><strong>Klasa:</strong> ' + classObj.className + '</div><div><strong>Viti:</strong> ' + systemData.schoolInfo.year + '</div></div>';
+            allHtml += '<div class="certificate-info"><div><strong>Periudha:</strong> ' + semesterName + '</div><div><strong>Data:</strong> ' + date + '</div></div>';
+            allHtml += '<div style="margin:3mm 0;font-size:11px;"><strong>Sjellja:</strong> ' + behavior + '</div>';
+            allHtml += '<table><thead><tr style="background:#0b4b6e;color:white;"><th>Lenda</th><th>Nota</th><th>Pershkrimi</th></tr></thead><tbody>' + subjectsHtml + '</tbody></table>';
+            allHtml += '<div class="certificate-avg-box"><div class="certificate-avg-value">' + avg + '</div><div>Mesatarja: ' + successDesc + '</div>' + (hasOne ? '<div style="color:#c62828;font-size:10px;">Ka ' + onesCount + ' note/nota 1</div>' : '') + '</div>';
+            allHtml += '<div class="certificate-absences-box"><strong>MUNGESAT</strong><div style="display:flex;justify-content:space-between;margin-top:2mm;font-size:10px;"><span>Me arsye: ' + abs.withReason + '</span><span>Pa arsye: ' + abs.withoutReason + '</span><span><strong>Gjithsej: ' + abs.total + '</strong></span></div></div>';
+            allHtml += '<div class="certificate-signatures"><div class="certificate-signature"><div class="certificate-signature-line">Kujdestari</div><div style="font-size:10px;margin-top:2mm;">' + (systemData.teachers.find(t => t.classId === classObj.id)?.name || '__________________') + '</div></div>';
+            allHtml += '<div class="certificate-signature"><div class="certificate-signature-line">Drejtori</div><div style="font-size:10px;margin-top:2mm;">' + systemData.schoolInfo.principal + '</div></div>';
+            allHtml += '<div class="certificate-signature"><div class="certificate-signature-line">Vula</div></div></div></div>';
+        });
+        allHtml += '</body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(allHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printSingleCertificate(studIdx) {
+        let cls = getCurrentClass();
+        if(cls && cls.students[studIdx]) {
+            printStudentCertificate(cls, cls.students[studIdx], currentSemesterView);
+        }
+    }
+    
+    function takeBackup() {
+        backupData = JSON.parse(JSON.stringify(systemData));
+        showNotification("Backup i ruajtur ne memorie per Undo!");
+    }
+    
+    function backupToFile() {
+        try {
+            let dataStr = JSON.stringify(systemData, null, 2);
+            let dataBlob = new Blob([dataStr], { type: "application/json" });
+            let url = URL.createObjectURL(dataBlob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = 'backup_shkolla_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.json';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            showNotification("Backup u shkarkua ne skedar!");
+        } catch(e) {
+            console.error("Gabim gjate backup:", e);
+            alert("Gabim gjate krijimit te backup: " + e.message);
+        }
+    }
+    
+    function restoreFromFile() {
+        let inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = '.json';
+        inp.onchange = function(e) {
+            let file = e.target.files[0];
+            if(!file) return;
+            let reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    let restoredData = JSON.parse(ev.target.result);
+                    systemData = restoredData;
+                    if(!systemData.actives) systemData.actives = [
+                        { id: "active_ix", name: "KLASA IX", code: "IX", order: 1 },
+                        { id: "active_viii", name: "KLASA VIII", code: "VIII", order: 2 },
+                        { id: "active_vii", name: "KLASA VII", code: "VII", order: 3 },
+                        { id: "active_vi", name: "KLASA VI", code: "VI", order: 4 }
+                    ];
+                    if(!systemData.curriculum) systemData.curriculum = { weeksSem1: 16, weeksSem2: 21 };
+                    if(!systemData.holidays) systemData.holidays = [];
+                    if(!systemData.semesterDates) systemData.semesterDates = {
+                        schoolStart: "2025-09-01",
+                        schoolEnd: "2026-06-15",
+                        semester1Start: "2025-09-01",
+                        semester1End: "2025-12-20",
+                        semester2Start: "2026-01-10",
+                        semester2End: "2026-06-15"
+                    };
+                    if(!systemData.adminPassword) systemData.adminPassword = "admin123";
+                    if(!systemData.schoolInfo) systemData.schoolInfo = { name: "SHFMU 'EMIN DURAKU' KACANIK", year: "2025-2026", principal: "DIANA REKA" };
+                    systemData.appVersion = APP_VERSION;
+                    saveToLocal();
+                    showNotification("Restaurimi u krye! Faqja po rifreskohet...");
+                    setTimeout(() => { location.reload(); }, 1500);
+                } catch(err) {
+                    alert("Gabim gjate leximit te skedarit: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+        inp.click();
+    }
+    
+    function undoChanges() {
+        if(backupData) {
+            systemData = JSON.parse(JSON.stringify(backupData));
+            saveToLocal();
+            refreshDisplay();
+            showNotification("Ndryshimet u kthyen mbrapa!");
+        } else {
+            alert("Nuk ka backup te ruajtur. Perdorni butonin 'Backup ne Memorie' per te ruajtur gjendjen aktuale.");
+        }
+    }
+    
+    function clearClassData(classId) {
+        if(confirm("A jeni i sigurt qe doni te fshini te gjithe nxenesit dhe te dhenat e kesaj klase? Do te mbetet vetem nje nxenes i ri.")) {
+            let cls = systemData.classes.find(c => c.id === classId);
+            if(cls) {
+                takeBackup();
+                cls.students = [createEmptyStudent(1, "Nxenes i ri", "M")];
+                saveToLocal();
+                refreshDisplay();
+                showNotification("Te dhenat e klases " + cls.className + " u pastruan!");
+            }
+        }
+    }
+    
+    function openSemesterDatesModal() {
+        document.getElementById('schoolStartDate').value = systemData.semesterDates?.schoolStart || '';
+        document.getElementById('schoolEndDate').value = systemData.semesterDates?.schoolEnd || '';
+        document.getElementById('semester1StartDate').value = systemData.semesterDates?.semester1Start || '';
+        document.getElementById('semester1EndDate').value = systemData.semesterDates?.semester1End || '';
+        document.getElementById('semester2StartDate').value = systemData.semesterDates?.semester2Start || '';
+        document.getElementById('semester2EndDate').value = systemData.semesterDates?.semester2End || '';
+        document.getElementById('semesterDatesModal').style.display = 'block';
+    }
+    
+    function closeSemesterDatesModal() {
+        document.getElementById('semesterDatesModal').style.display = 'none';
+    }
+    
+    function saveSemesterDates() {
+        if(!systemData.semesterDates) systemData.semesterDates = {};
+        systemData.semesterDates.schoolStart = document.getElementById('schoolStartDate').value;
+        systemData.semesterDates.schoolEnd = document.getElementById('schoolEndDate').value;
+        systemData.semesterDates.semester1Start = document.getElementById('semester1StartDate').value;
+        systemData.semesterDates.semester1End = document.getElementById('semester1EndDate').value;
+        systemData.semesterDates.semester2Start = document.getElementById('semester2StartDate').value;
+        systemData.semesterDates.semester2End = document.getElementById('semester2EndDate').value;
+        saveToLocal();
+        closeSemesterDatesModal();
+        refreshDisplay();
+        showNotification("Datat e gjysmevjetoreve u ruajten!");
+    }
+    
+    function openPrincipalModal() { 
+        document.getElementById('newPrincipalName').value = systemData.schoolInfo.principal; 
+        document.getElementById('changePrincipalModal').style.display = 'block'; 
+    }
+    
+    function closePrincipalModal() { 
+        document.getElementById('changePrincipalModal').style.display = 'none'; 
+    }
+    
+    function savePrincipalName() { 
+        let newName = document.getElementById('newPrincipalName').value.trim(); 
+        if(newName) { 
+            systemData.schoolInfo.principal = newName; 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Emri i drejtorit u ndryshua!"); 
+        } 
+        closePrincipalModal(); 
+    }
+    
+    function openYearModal() { 
+        document.getElementById('newSchoolYear').value = systemData.schoolInfo.year; 
+        document.getElementById('changeYearModal').style.display = 'block'; 
+    }
+    
+    function closeYearModal() { 
+        document.getElementById('changeYearModal').style.display = 'none'; 
+    }
+    
+    function saveSchoolYear() { 
+        let newYear = document.getElementById('newSchoolYear').value.trim(); 
+        if(newYear) { 
+            systemData.schoolInfo.year = newYear; 
+            saveToLocal(); 
+            refreshDisplay(); 
+            showNotification("Viti shkollor u ndryshua!"); 
+        } 
+        closeYearModal(); 
+    }
+    
+    function openPasswordModal() { 
+        let select = document.getElementById('passwordTeacherSelect'); 
+        select.innerHTML = '<option value="">-- Zgjidhni kujdestarin --</option>'; 
+        systemData.teachers.forEach(t => { 
+            select.innerHTML += '<option value="' + t.id + '">' + t.name + ' (' + t.username + ')</option>'; 
+        }); 
+        document.getElementById('newPassword').value = ''; 
+        document.getElementById('adminNewPassword').value = ''; 
+        document.getElementById('passwordTypeSelect').value = 'teacher'; 
+        togglePasswordType(); 
+        document.getElementById('changePasswordModal').style.display = 'block'; 
+    }
+    
+    function togglePasswordType() { 
+        let type = document.getElementById('passwordTypeSelect').value; 
+        if (type === 'teacher') { 
+            document.getElementById('teacherSelectGroup').style.display = 'block'; 
+            document.getElementById('adminPasswordGroup').style.display = 'none'; 
+        } else { 
+            document.getElementById('teacherSelectGroup').style.display = 'none'; 
+            document.getElementById('adminPasswordGroup').style.display = 'block'; 
+        } 
+    }
+    
+    function openChangePasswordForTeacher(teacherId) { 
+        let teacher = systemData.teachers.find(t => t.id === teacherId); 
+        if(teacher) { 
+            let newPass = prompt("Ndrysho fjalekalimin per " + teacher.name + ":", teacher.password); 
+            if(newPass && newPass.trim()) { 
+                teacher.password = newPass.trim(); 
+                saveToLocal(); 
+                showNotification("Fjalekalimi per " + teacher.name + " u ndryshua!"); 
+                refreshDisplay(); 
+            } 
+        } 
+    }
+    
+    function closePasswordModal() { 
+        document.getElementById('changePasswordModal').style.display = 'none'; 
+    }
+    
+    function saveTeacherPassword() { 
+        let type = document.getElementById('passwordTypeSelect').value; 
+        if (type === 'admin') { 
+            let newPass = document.getElementById('adminNewPassword').value.trim(); 
+            if (!newPass) { alert("Vendosni fjalekalimin e ri per admin!"); return; } 
+            systemData.adminPassword = newPass; 
+            saveToLocal(); 
+            showNotification("Fjalekalimi i administratorit u ndryshua!"); 
+            closePasswordModal(); 
+            refreshDisplay(); 
+        } else { 
+            let teacherId = document.getElementById('passwordTeacherSelect').value; 
+            let newPass = document.getElementById('newPassword').value.trim(); 
+            if(!teacherId) { alert("Zgjidhni kujdestarin!"); return; } 
+            if(!newPass) { alert("Vendosni fjalekalimin e ri!"); return; } 
+            let teacher = systemData.teachers.find(t => t.id === teacherId); 
+            if(teacher) { 
+                teacher.password = newPass; 
+                saveToLocal(); 
+                showNotification("Fjalekalimi per " + teacher.name + " u ndryshua!"); 
+                closePasswordModal(); 
+                refreshDisplay(); 
+            } 
+        } 
+    }
+    
+    // ========== FUNKSIONET PËR PLANIN MËSIMOR ==========
+    function initClassCurriculum(classId) {
+        if(!systemData.curriculum[classId]) {
+            systemData.curriculum[classId] = {};
+            ALL_SUBJECTS.forEach(sub => {
+                systemData.curriculum[classId][sub.key] = { hoursPerWeek: 2, hoursDoneSem1: 0, hoursDoneSem2: 0 };
+            });
+        }
+    }
+    
+    function openClassCurriculumModal(classId) {
+        initClassCurriculum(classId);
+        renderClassCurriculumTable(classId);
+        window.currentCurriculumClassId = classId;
+        document.getElementById('curriculumModal').style.display = 'block';
+    }
+    
+    function closeCurriculumModal() {
+        document.getElementById('curriculumModal').style.display = 'none';
+        window.currentCurriculumClassId = null;
+    }
+    
+    function renderClassCurriculumTable(classId) {
+        const container = document.getElementById('curriculumContent');
+        if (!container) return;
+        let classObj = systemData.classes.find(c => c.id === classId);
+        if(!classObj) return;
+        let curriculum = systemData.curriculum[classId] || {};
+        let weeksSem1 = systemData.curriculum.weeksSem1;
+        let weeksSem2 = systemData.curriculum.weeksSem2;
+        let html = '<div class="weeks-control"><div><label>📅 Javët Gjysmevjetori I:</label> <input type="number" id="weeksSem1Input" value="' + weeksSem1 + '" style="width:70px;" onchange="updateWeeksFromModal()"></div><div><label>📅 Javët Gjysmevjetori II:</label> <input type="number" id="weeksSem2Input" value="' + weeksSem2 + '" style="width:70px;" onchange="updateWeeksFromModal()"></div><button class="btn btn-info" onclick="updateWeeksFromModal()">Përditëso</button></div>';
+        html += '<table class="curriculum-table"><thead><tr style="background:#0b4b6e; color:white;"><th rowspan="2">Lënda</th><th rowspan="2">Orë/javë</th><th colspan="4">Gjysmevjetori I</th><th colspan="4">Gjysmevjetori II</th><th colspan="4">Gjithsej</th></tr><tr style="background:#0b4b6e; color:white;"><th>Planifikuar</th><th>Mbajtura</th><th>Pambajtura</th><th>%</th><th>Planifikuar</th><th>Mbajtura</th><th>Pambajtura</th><th>%</th><th>Planifikuar</th><th>Mbajtura</th><th>Pambajtura</th><th>%</th></td></thead><tbody>';
+        classObj.subjectsOrder.forEach((sub) => {
+            let cur = curriculum[sub.key] || { hoursPerWeek: 2, hoursDoneSem1: 0, hoursDoneSem2: 0 };
+            let planned1 = cur.hoursPerWeek * weeksSem1;
+            let planned2 = cur.hoursPerWeek * weeksSem2;
+            let done1 = cur.hoursDoneSem1 || 0;
+            let done2 = cur.hoursDoneSem2 || 0;
+            let lost1 = planned1 - done1;
+            let lost2 = planned2 - done2;
+            let percent1 = planned1 > 0 ? ((done1 / planned1) * 100).toFixed(1) : '0';
+            let percent2 = planned2 > 0 ? ((done2 / planned2) * 100).toFixed(1) : '0';
+            let totalPlanned = planned1 + planned2;
+            let totalDone = done1 + done2;
+            let totalLost = totalPlanned - totalDone;
+            let totalPercent = totalPlanned > 0 ? ((totalDone / totalPlanned) * 100).toFixed(1) : '0';
+            html += '<tr><td style="text-align:left;"><strong>' + sub.name + '</strong></td><td><input type="number" class="hours-per-week" data-key="' + sub.key + '" value="' + cur.hoursPerWeek + '" style="width:55px;" onchange="updateCurriculumRow(\'' + classId + '\', \'' + sub.key + '\')"></td><td class="planned1" data-key="' + sub.key + '">' + planned1 + '</td><td><input type="number" class="hours-done1" data-key="' + sub.key + '" value="' + done1 + '" style="width:55px;" onchange="updateCurriculumRow(\'' + classId + '\', \'' + sub.key + '\')"></td><td class="lost1" data-key="' + sub.key + '" style="color:' + (lost1 > 0 ? '#c62828' : '#2e7d32') + '">' + lost1 + '</td><td class="percent1" data-key="' + sub.key + '">' + percent1 + '%</td><td class="planned2" data-key="' + sub.key + '">' + planned2 + '</td><td><input type="number" class="hours-done2" data-key="' + sub.key + '" value="' + done2 + '" style="width:55px;" onchange="updateCurriculumRow(\'' + classId + '\', \'' + sub.key + '\')"></td><td class="lost2" data-key="' + sub.key + '" style="color:' + (lost2 > 0 ? '#c62828' : '#2e7d32') + '">' + lost2 + '</td><td class="percent2" data-key="' + sub.key + '">' + percent2 + '%</td><td class="totalPlanned" data-key="' + sub.key + '">' + totalPlanned + '</td><td class="totalDone" data-key="' + sub.key + '">' + totalDone + '</td><td class="totalLost" data-key="' + sub.key + '" style="color:' + (totalLost > 0 ? '#c62828' : '#2e7d32') + '">' + totalLost + '</td><td class="totalPercent" data-key="' + sub.key + '">' + totalPercent + '%</td></tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        window.currentCurriculumClassId = classId;
+    }
+    
+    function updateCurriculumRow(classId, key) {
+        let weeksSem1 = systemData.curriculum.weeksSem1;
+        let weeksSem2 = systemData.curriculum.weeksSem2;
+        let hpw = parseInt(document.querySelector(`.hours-per-week[data-key="${key}"]`)?.value) || 0;
+        let done1 = parseInt(document.querySelector(`.hours-done1[data-key="${key}"]`)?.value) || 0;
+        let done2 = parseInt(document.querySelector(`.hours-done2[data-key="${key}"]`)?.value) || 0;
+        let planned1 = hpw * weeksSem1;
+        let planned2 = hpw * weeksSem2;
+        let lost1 = planned1 - done1;
+        let lost2 = planned2 - done2;
+        let percent1 = planned1 > 0 ? ((done1 / planned1) * 100).toFixed(1) : '0';
+        let percent2 = planned2 > 0 ? ((done2 / planned2) * 100).toFixed(1) : '0';
+        let totalPlanned = planned1 + planned2;
+        let totalDone = done1 + done2;
+        let totalLost = totalPlanned - totalDone;
+        let totalPercent = totalPlanned > 0 ? ((totalDone / totalPlanned) * 100).toFixed(1) : '0';
+        document.querySelector(`.planned1[data-key="${key}"]`).innerText = planned1;
+        document.querySelector(`.lost1[data-key="${key}"]`).innerText = lost1;
+        document.querySelector(`.percent1[data-key="${key}"]`).innerText = percent1 + '%';
+        document.querySelector(`.planned2[data-key="${key}"]`).innerText = planned2;
+        document.querySelector(`.lost2[data-key="${key}"]`).innerText = lost2;
+        document.querySelector(`.percent2[data-key="${key}"]`).innerText = percent2 + '%';
+        document.querySelector(`.totalPlanned[data-key="${key}"]`).innerText = totalPlanned;
+        document.querySelector(`.totalDone[data-key="${key}"]`).innerText = totalDone;
+        document.querySelector(`.totalLost[data-key="${key}"]`).innerText = totalLost;
+        document.querySelector(`.totalPercent[data-key="${key}"]`).innerText = totalPercent + '%';
+        if(!systemData.curriculum[classId]) systemData.curriculum[classId] = {};
+        systemData.curriculum[classId][key] = { hoursPerWeek: hpw, hoursDoneSem1: done1, hoursDoneSem2: done2 };
+    }
+    
+    function updateWeeksFromModal() {
+        let weeksSem1 = parseInt(document.getElementById('weeksSem1Input')?.value) || 16;
+        let weeksSem2 = parseInt(document.getElementById('weeksSem2Input')?.value) || 21;
+        systemData.curriculum.weeksSem1 = weeksSem1;
+        systemData.curriculum.weeksSem2 = weeksSem2;
+        if(window.currentCurriculumClassId) renderClassCurriculumTable(window.currentCurriculumClassId);
+        showNotification("Javët u përditësuan!");
+    }
+    
+    function saveClassCurriculum() {
+        if(window.currentCurriculumClassId) {
+            saveToLocal();
+            closeCurriculumModal();
+            showNotification("Plani mesimor i klases u ruajt!");
+        }
+    }
+    
+    function openAdminCurriculumModal() {
+        renderAdminCurriculumTable();
+        document.getElementById('adminCurriculumModal').style.display = 'block';
+    }
+    
+    function closeAdminCurriculumModal() {
+        document.getElementById('adminCurriculumModal').style.display = 'none';
+    }
+    
+    function renderAdminCurriculumTable() {
+        const container = document.getElementById('adminCurriculumContent');
+        if (!container) return;
+        let weeksSem1 = systemData.curriculum.weeksSem1;
+        let weeksSem2 = systemData.curriculum.weeksSem2;
+        let html = '<div class="weeks-control"><div><label>📅 Javët Gjysmevjetori I:</label> <input type="number" id="adminWeeksSem1" value="' + weeksSem1 + '" style="width:70px;"></div><div><label>📅 Javët Gjysmevjetori II:</label> <input type="number" id="adminWeeksSem2" value="' + weeksSem2 + '" style="width:70px;"></div><button class="btn btn-info" onclick="updateAdminWeeks()">Përditëso</button></div>';
+        systemData.classes.forEach(cls => {
+            initClassCurriculum(cls.id);
+            let curriculum = systemData.curriculum[cls.id] || {};
+            html += '<h3 style="margin-top:20px; background:#0b4b6e; color:white; padding:8px; border-radius:8px;">📚 Klasa: ' + cls.className + '</h3>';
+            html += '<table class="curriculum-table" style="margin-bottom:20px;"><thead><tr style="background:#0b4b6e; color:white;"><th>Lënda</th><th>Orë/javë</th><th colspan="4">Gjysmevjetori I</th><th colspan="4">Gjysmevjetori II</th><th colspan="4">Gjithsej</th></tr><tr style="background:#0b4b6e; color:white;"><th></th><th></th><th>Plan.</th><th>Mbaj.</th><th>Pamb.</th><th>%</th><th>Plan.</th><th>Mbaj.</th><th>Pamb.</th><th>%</th><th>Plan.</th><th>Mbaj.</th><th>Pamb.</th><th>%</th></tr></thead><tbody>';
+            cls.subjectsOrder.forEach(sub => {
+                let cur = curriculum[sub.key] || { hoursPerWeek: 2, hoursDoneSem1: 0, hoursDoneSem2: 0 };
+                let planned1 = cur.hoursPerWeek * weeksSem1;
+                let planned2 = cur.hoursPerWeek * weeksSem2;
+                let done1 = cur.hoursDoneSem1 || 0;
+                let done2 = cur.hoursDoneSem2 || 0;
+                let lost1 = planned1 - done1;
+                let lost2 = planned2 - done2;
+                let percent1 = planned1 > 0 ? ((done1 / planned1) * 100).toFixed(1) : '0';
+                let percent2 = planned2 > 0 ? ((done2 / planned2) * 100).toFixed(1) : '0';
+                let totalPlanned = planned1 + planned2;
+                let totalDone = done1 + done2;
+                let totalLost = totalPlanned - totalDone;
+                let totalPercent = totalPlanned > 0 ? ((totalDone / totalPlanned) * 100).toFixed(1) : '0';
+                html += '<tr><td style="text-align:left;">' + sub.name + '</td><td>' + cur.hoursPerWeek + '</td><td>' + planned1 + '</td><td>' + done1 + '</td><td style="color:' + (lost1 > 0 ? '#c62828' : '#2e7d32') + '">' + lost1 + '</td><td>' + percent1 + '%</td><td>' + planned2 + '</td><td>' + done2 + '</td><td style="color:' + (lost2 > 0 ? '#c62828' : '#2e7d32') + '">' + lost2 + '</td><td>' + percent2 + '%</td><td>' + totalPlanned + '</td><td>' + totalDone + '</td><td style="color:' + (totalLost > 0 ? '#c62828' : '#2e7d32') + '">' + totalLost + '</td><td>' + totalPercent + '%</td></tr>';
+            });
+            html += '</tbody></table>';
+        });
+        container.innerHTML = html;
+    }
+    
+    function updateAdminWeeks() {
+        let weeksSem1 = parseInt(document.getElementById('adminWeeksSem1').value) || 16;
+        let weeksSem2 = parseInt(document.getElementById('adminWeeksSem2').value) || 21;
+        systemData.curriculum.weeksSem1 = weeksSem1;
+        systemData.curriculum.weeksSem2 = weeksSem2;
+        saveToLocal();
+        renderAdminCurriculumTable();
+        showNotification("Javët u përditësuan për të gjitha klasat!");
+    }
+    
+    function saveAdminCurriculum() {
+        saveToLocal();
+        closeAdminCurriculumModal();
+        showNotification("Të dhënat e planeve mësimore u ruajtën!");
+    }
+    
+    function printCurriculumPlan() {
+        let content = document.getElementById('curriculumContent').innerHTML;
+        let classObj = getCurrentClass();
+        let className = classObj ? classObj.className : 'Klasa';
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Plani Mesimor - ' + className + '</title><style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:6mm;border-bottom:2px solid #0b4b6e;padding-bottom:3mm;} .report-title{font-size:20px;font-weight:bold;color:#0b4b6e;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #000;padding:4px;text-align:center;font-size:10px;} th{background:#0b4b6e;color:white;}</style></head><body><div class="report-container"><div class="report-header"><div class="report-title">Plani Mesimor - ' + className + '</div><div>Viti Shkollor: ' + systemData.schoolInfo.year + ' | Data: ' + formatDate() + '</div></div>' + content + '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printAdminCurriculumPlan() {
+        let content = document.getElementById('adminCurriculumContent').innerHTML;
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Planet Mesimore te Klasave</title><style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:6mm;border-bottom:2px solid #0b4b6e;padding-bottom:3mm;} .report-title{font-size:20px;font-weight:bold;color:#0b4b6e;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #000;padding:4px;text-align:center;font-size:10px;} th{background:#0b4b6e;color:white;}</style></head><body><div class="report-container"><div class="report-header"><div class="report-title">Planet Mesimore te Klasave</div><div>Viti Shkollor: ' + systemData.schoolInfo.year + ' | Data: ' + formatDate() + '</div></div>' + content + '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printSchedule() {
+        let content = document.getElementById('scheduleContent').innerHTML;
+        let classObj = getCurrentClass();
+        let className = classObj ? classObj.className : 'Klasa';
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Orari - ' + className + '</title><style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:6mm;border-bottom:2px solid #0b4b6e;padding-bottom:3mm;} .report-title{font-size:20px;font-weight:bold;color:#0b4b6e;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #000;padding:6px;text-align:center;} th{background:#0b4b6e;color:white;}</style></head><body><div class="report-container"><div class="report-header"><div class="report-title">Orari i Klases - ' + className + '</div><div>Viti Shkollor: ' + systemData.schoolInfo.year + ' | Data: ' + formatDate() + '</div></div>' + content + '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function printHolidays() {
+        let content = document.getElementById('holidaysList').innerHTML;
+        let printHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Festat - Viti Shkollor</title><style>body{font-family:"Times New Roman", Times, serif;margin:0;padding:0;} .report-container{max-width:210mm;margin:0 auto;padding:8mm;} .report-header{text-align:center;margin-bottom:6mm;border-bottom:2px solid #0b4b6e;padding-bottom:3mm;} .report-title{font-size:20px;font-weight:bold;color:#0b4b6e;} table{border-collapse:collapse;width:100%;margin:3mm 0;} th,td{border:1px solid #000;padding:6px;text-align:center;} th{background:#0b4b6e;color:white;}</style></head><body><div class="report-container"><div class="report-header"><div class="report-title">Lista e Festave</div><div>Viti Shkollor: ' + systemData.schoolInfo.year + ' | Data: ' + formatDate() + '</div></div>' + content + '</div></body></html>';
+        let win = window.open('', '_blank');
+        win.document.write(printHtml);
+        win.document.close();
+        win.print();
+    }
+    
+    function initClassSchedule(classId) {
+        let classObj = systemData.classes.find(c => c.id === classId);
+        if(classObj && !classObj.schedule) {
+            classObj.schedule = {};
+            const days = ['ehene', 'emarte', 'emerKure', 'eenjte', 'epremte'];
+            const hours = [1,2,3,4,5,6];
+            days.forEach(day => {
+                classObj.schedule[day] = {};
+                hours.forEach(hour => { classObj.schedule[day][hour] = ''; });
+            });
+        }
+    }
+    
+    function openScheduleModal(classId) {
+        initClassSchedule(classId);
+        renderScheduleTable(classId);
+        window.currentScheduleClassId = classId;
+        document.getElementById('scheduleModal').style.display = 'block';
+    }
+    
+    function closeScheduleModal() {
+        document.getElementById('scheduleModal').style.display = 'none';
+        window.currentScheduleClassId = null;
+    }
+    
+    function renderScheduleTable(classId) {
+        const container = document.getElementById('scheduleContent');
+        if (!container) return;
+        let classObj = systemData.classes.find(c => c.id === classId);
+        if(!classObj) return;
+        let schedule = classObj.schedule || {};
+        const days = [{ key: 'ehene', name: 'E HENE' }, { key: 'emarte', name: 'E MARTE' }, { key: 'emerKure', name: 'E MERKURE' }, { key: 'eenjte', name: 'E ENJTE' }, { key: 'epremte', name: 'E PREMTE' }];
+        const hours = [1,2,3,4,5,6];
+        let html = '<table class="schedule-table"><thead><th>Ora</th>';
+        days.forEach(day => html += '<th>' + day.name + '</th>');
+        html += '</thead><tbody>';
+        hours.forEach(hour => {
+            html += '<tr>';
+            html += '<td><strong>' + hour + '</strong></td>';
+            days.forEach(day => {
+                let currentValue = schedule[day.key]?.[hour] || '';
+                html += '<td><select class="schedule-select" data-day="' + day.key + '" data-hour="' + hour + '">';
+                html += '<option value="">-- Zgjidh --</option>';
+                classObj.subjectsOrder.forEach(sub => {
+                    html += '<option value="' + sub.key + '" ' + (currentValue === sub.key ? 'selected' : '') + '>' + sub.name + '</option>';
+                });
+                html += '</select></td>';
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        document.querySelectorAll('.schedule-select').forEach(select => {
+            select.addEventListener('change', (e) => {
+                let day = select.dataset.day;
+                let hour = parseInt(select.dataset.hour);
+                let value = select.value;
+                if(!classObj.schedule) classObj.schedule = {};
+                if(!classObj.schedule[day]) classObj.schedule[day] = {};
+                classObj.schedule[day][hour] = value;
+            });
+        });
+    }
+    
+    function saveSchedule() {
+        if(window.currentScheduleClassId) {
+            saveToLocal();
+            closeScheduleModal();
+            showNotification("Orari u ruajt!");
+        }
+    }
+    
+    function openHolidayModal() {
+        renderHolidaysList();
+        document.getElementById('holidayModal').style.display = 'block';
+    }
+    
+    function closeHolidayModal() {
+        document.getElementById('holidayModal').style.display = 'none';
+    }
+    
+    function renderHolidaysList() {
+        const container = document.getElementById('holidaysList');
+        if (!container) return;
+        if(!systemData.holidays) systemData.holidays = [];
+        let html = '<h3>Lista e festave</h3><table class="holiday-table"><thead><th>Data</th><th>Emri i festes</th><th>Gjysmevjetori I</th><th>Gjysmevjetori II</th><th></th></thead><tbody>';
+        systemData.holidays.forEach((holiday, idx) => {
+            html += '<tr><td style="white-space:nowrap;">' + holiday.date + '</td><td style="text-align:left;">' + escapeHtml(holiday.name) + '</td><td style="text-align:center;"><input type="checkbox" class="holiday-sem1" data-idx="' + idx + '" ' + (holiday.semester1 ? 'checked' : '') + '></td><td style="text-align:center;"><input type="checkbox" class="holiday-sem2" data-idx="' + idx + '" ' + (holiday.semester2 ? 'checked' : '') + '></td><td><button class="btn btn-danger btn-sm" onclick="removeHoliday(' + idx + ')">Fshi</button></td></tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        document.querySelectorAll('.holiday-sem1, .holiday-sem2').forEach(chk => {
+            chk.addEventListener('change', (e) => {
+                let idx = parseInt(chk.dataset.idx);
+                if(!isNaN(idx) && systemData.holidays[idx]) {
+                    if(chk.classList.contains('holiday-sem1')) systemData.holidays[idx].semester1 = chk.checked;
+                    if(chk.classList.contains('holiday-sem2')) systemData.holidays[idx].semester2 = chk.checked;
+                    renderHolidaysList();
+                }
+            });
+        });
+    }
+    
+    function addHoliday() {
+        let date = document.getElementById('holidayDate').value.trim();
+        let name = document.getElementById('holidayName').value.trim();
+        let sem1 = document.getElementById('holidaySem1').checked;
+        let sem2 = document.getElementById('holidaySem2').checked;
+        if(!date || !name) { alert("Plotesoni daten dhe emrin e festes!"); return; }
+        if(!sem1 && !sem2) { alert("Zgjidhni se paku nje gjysmevjetor!"); return; }
+        if(!systemData.holidays) systemData.holidays = [];
+        systemData.holidays.push({ date: date, name: name, semester1: sem1, semester2: sem2 });
+        document.getElementById('holidayDate').value = '';
+        document.getElementById('holidayName').value = '';
+        document.getElementById('holidaySem1').checked = false;
+        document.getElementById('holidaySem2').checked = false;
+        renderHolidaysList();
+        showNotification("Festa u shtua!");
+    }
+    
+    function removeHoliday(idx) {
+        if(confirm("A jeni i sigurt qe doni ta fshini kete feste?")) {
+            systemData.holidays.splice(idx, 1);
+            renderHolidaysList();
+            showNotification("Festa u fshi!");
+        }
+    }
+    
+    function saveHolidays() {
+        saveToLocal();
+        closeHolidayModal();
+        showNotification("Festat u ruajten!");
+    }
+    
+    function openActiveModal() {
+        renderActivesList();
+        document.getElementById('activeModal').style.display = 'block';
+    }
+    
+    function closeActiveModal() {
+        document.getElementById('activeModal').style.display = 'none';
+    }
+    
+    function renderActivesList() {
+        const container = document.getElementById('activesListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        systemData.actives.sort((a,b) => a.order - b.order).forEach((act, idx) => {
+            const div = document.createElement('div');
+            div.className = 'subject-item';
+            div.innerHTML = '<span style="font-weight:bold; min-width:35px;">' + (idx+1) + '.</span><input type="text" class="active-name" value="' + escapeHtml(act.name) + '" data-id="' + act.id + '" style="flex:2;"><input type="text" class="active-code" value="' + escapeHtml(act.code) + '" data-id="' + act.id + '" style="width:70px; text-align:center;"><button class="edit-active" data-id="' + act.id + '" style="background:#e3f2fd;">✏️</button><button class="move-up" data-idx="' + idx + '" ' + (idx === 0 ? 'disabled style="opacity:0.5;"' : '') + '>⬆</button><button class="move-down" data-idx="' + idx + '" ' + (idx === systemData.actives.length-1 ? 'disabled style="opacity:0.5;"' : '') + '>⬇</button><button class="delete-active" data-id="' + act.id + '" style="background:#fee2e2;">🗑</button>';
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.active-name').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                let id = e.target.dataset.id;
+                let act = systemData.actives.find(a => a.id === id);
+                if(act) act.name = e.target.value;
+            });
+        });
+        document.querySelectorAll('.active-code').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                let id = e.target.dataset.id;
+                let act = systemData.actives.find(a => a.id === id);
+                if(act) act.code = e.target.value.toUpperCase();
+            });
+        });
+        document.querySelectorAll('.move-up').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                if (idx > 0) {
+                    [systemData.actives[idx-1], systemData.actives[idx]] = [systemData.actives[idx], systemData.actives[idx-1]];
+                    [systemData.actives[idx-1].order, systemData.actives[idx].order] = [idx-1, idx];
+                    renderActivesList();
+                }
+            });
+        });
+        document.querySelectorAll('.move-down').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                if (idx < systemData.actives.length-1) {
+                    [systemData.actives[idx], systemData.actives[idx+1]] = [systemData.actives[idx+1], systemData.actives[idx]];
+                    [systemData.actives[idx].order, systemData.actives[idx+1].order] = [idx, idx+1];
+                    renderActivesList();
+                }
+            });
+        });
+        document.querySelectorAll('.delete-active').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let id = btn.dataset.id;
+                if (systemData.actives.length <= 1) { alert("Duhet te mbetet se paku nje aktiv!"); return; }
+                let activeToRemove = systemData.actives.find(a => a.id === id);
+                if (confirm("A jeni i sigurt qe doni te fshini aktivin \"" + activeToRemove.name + "\"?")) {
+                    systemData.actives = systemData.actives.filter(a => a.id !== id);
+                    systemData.classes.forEach(c => {
+                        if(c.activeId === id) c.activeId = null;
+                    });
+                    renderActivesList();
+                }
+            });
+        });
+    }
+    
+    function addNewActive() {
+        let newName = document.getElementById('newActiveName').value.trim();
+        let newCode = document.getElementById('newActiveCode').value.trim().toUpperCase();
+        if (!newName) { alert("Shkruani emrin e aktivit!"); return; }
+        if (!newCode) newCode = newName.substring(0,2).toUpperCase();
+        const newId = 'active_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+        const newActive = { id: newId, name: newName, code: newCode, order: systemData.actives.length };
+        systemData.actives.push(newActive);
+        document.getElementById('newActiveName').value = '';
+        document.getElementById('newActiveCode').value = '';
+        renderActivesList();
+        showNotification("Aktivi u shtua!");
+    }
+    
+    function saveActives() {
+        saveToLocal();
+        closeActiveModal();
+        refreshDisplay();
+        showNotification("Aktivet u përditësuan!");
+    }
+    
+    function openSubjectsModal() {
+        renderSubjectsList();
+        document.getElementById('subjectsModal').style.display = 'block';
+    }
+    
+    function closeSubjectsModal() {
+        document.getElementById('subjectsModal').style.display = 'none';
+    }
+    
+    function renderSubjectsList() {
+        const container = document.getElementById('subjectsListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        ALL_SUBJECTS.forEach((sub, idx) => {
+            const div = document.createElement('div');
+            div.className = 'subject-item';
+            div.innerHTML = '<span style="font-weight:bold; min-width:35px;">' + (idx+1) + '.</span><input type="text" class="subj-name" value="' + escapeHtml(sub.name) + '" data-idx="' + idx + '" style="flex:2;"><input type="text" class="subj-code" value="' + escapeHtml(sub.code) + '" data-idx="' + idx + '" style="width:70px; text-align:center;"><input type="text" class="subj-group" value="' + escapeHtml(sub.group) + '" data-idx="' + idx + '" style="width:120px;"><button class="edit-subj" data-idx="' + idx + '" style="background:#e3f2fd;">✏️</button><button class="move-up" data-idx="' + idx + '" ' + (idx === 0 ? 'disabled style="opacity:0.5;"' : '') + '>⬆</button><button class="move-down" data-idx="' + idx + '" ' + (idx === ALL_SUBJECTS.length-1 ? 'disabled style="opacity:0.5;"' : '') + '>⬇</button><button class="delete-subj" data-idx="' + idx + '" style="background:#fee2e2;">🗑</button>';
+            container.appendChild(div);
+        });
+        document.querySelectorAll('.subj-name').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                let idx = parseInt(e.target.dataset.idx);
+                if (!isNaN(idx) && ALL_SUBJECTS[idx]) ALL_SUBJECTS[idx].name = e.target.value;
+            });
+        });
+        document.querySelectorAll('.subj-code').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                let idx = parseInt(e.target.dataset.idx);
+                if (!isNaN(idx) && ALL_SUBJECTS[idx]) ALL_SUBJECTS[idx].code = e.target.value.toUpperCase();
+            });
+        });
+        document.querySelectorAll('.subj-group').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                let idx = parseInt(e.target.dataset.idx);
+                if (!isNaN(idx) && ALL_SUBJECTS[idx]) ALL_SUBJECTS[idx].group = e.target.value;
+            });
+        });
+        document.querySelectorAll('.edit-subj').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                let sub = ALL_SUBJECTS[idx];
+                let newName = prompt("Ndrysho emrin e lendes:", sub.name);
+                if (newName && newName.trim()) {
+                    sub.name = newName.trim();
+                    let newCode = prompt("Ndrysho kodin e lendes:", sub.code);
+                    if (newCode && newCode.trim()) sub.code = newCode.trim().toUpperCase();
+                    let newGroup = prompt("Ndrysho fushen kurrikulare:", sub.group);
+                    if (newGroup && newGroup.trim()) sub.group = newGroup.trim();
+                    renderSubjectsList();
+                    showNotification("Lenda u ndryshua!");
+                }
+            });
+        });
+        document.querySelectorAll('.move-up').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                if (idx > 0) {
+                    [ALL_SUBJECTS[idx-1], ALL_SUBJECTS[idx]] = [ALL_SUBJECTS[idx], ALL_SUBJECTS[idx-1]];
+                    renderSubjectsList();
+                }
+            });
+        });
+        document.querySelectorAll('.move-down').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                if (idx < ALL_SUBJECTS.length-1) {
+                    [ALL_SUBJECTS[idx], ALL_SUBJECTS[idx+1]] = [ALL_SUBJECTS[idx+1], ALL_SUBJECTS[idx]];
+                    renderSubjectsList();
+                }
+            });
+        });
+        document.querySelectorAll('.delete-subj').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                let idx = parseInt(btn.dataset.idx);
+                if (ALL_SUBJECTS.length <= 1) { alert("Duhet te mbetet se paku nje lende!"); return; }
+                const subToRemove = ALL_SUBJECTS[idx];
+                if (confirm("A jeni i sigurt qe doni te fshini lenden \"" + subToRemove.name + "\"?")) {
+                    ALL_SUBJECTS.splice(idx, 1);
+                    systemData.classes.forEach(cls => {
+                        cls.students.forEach(s => {
+                            delete s.grades[subToRemove.key];
+                            delete s.gradesSemester2[subToRemove.key];
+                        });
+                        cls.subjectsOrder = cls.subjectsOrder.filter(sub => sub.key !== subToRemove.key);
+                    });
+                    renderSubjectsList();
+                }
+            });
+        });
+    }
+    
+    function addNewSubject() {
+        let newName = document.getElementById('newSubjectName').value.trim();
+        let newCode = document.getElementById('newSubjectCode').value.trim().toUpperCase();
+        if (!newName) { alert("Shkruani emrin e lendes!"); return; }
+        if (!newCode) newCode = newName.substring(0,2).toUpperCase();
+        const newKey = 'sub_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+        const newSubject = { code: newCode, key: newKey, name: newName, group: 'Te tjera' };
+        ALL_SUBJECTS.push(newSubject);
+        systemData.classes.forEach(cls => {
+            cls.students.forEach(s => {
+                s.grades[newKey] = '';
+                s.gradesSemester2[newKey] = '';
+            });
+            cls.subjectsOrder.push({ ...newSubject });
+        });
+        document.getElementById('newSubjectName').value = '';
+        document.getElementById('newSubjectCode').value = '';
+        renderSubjectsList();
+        showNotification("Lenda u shtua!");
+    }
+    
+    function saveSubjectsOrder() {
+        systemData.classes.forEach(cls => {
+            cls.subjectsOrder = [...ALL_SUBJECTS];
+        });
+        saveToLocal();
+        closeSubjectsModal();
+        refreshDisplay();
+        showNotification("Lista e lendeve u përditësua!");
+    }
+    
+    const nbsp = ' ';
+    
+    loadTeacherOfflineData();
+    loadFromLocal();
+</script>
+</body>
+</html>
