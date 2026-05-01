@@ -3477,5 +3477,29 @@
     loadTeacherOfflineData();
     loadFromLocal();
 </script>
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabaseClient = supabase.createClient(
+  "https://xltrandcalitqeephsih.supabase.co",
+  "sb_publishable_gG-UPgSrmAFLWv73KPfNDg_Vj5E_AxG"
+);
+
+async function test() {
+  let { data, error } = await supabaseClient
+    .from('nxenesit')
+    .select('*');
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+}
+
+test();
+</script>
+
+</body>
+</html>
 </body>
 </html>
