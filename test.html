@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test i Lidhjes me Cloud</h1>
+    <button onclick="testAPI()">Testo Lidhjen</button>
+    <div id="result"></div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbwK08ef0kDbaD104uHM1afXVcVsj0TEA8SmRZ-Y1ZKd5f8m5139A9SdSUmhUqZcoEqe/exec";
+        
+        async function testAPI() {
+            document.getElementById('result').innerHTML = "Duke testuar...";
+            try {
+                const response = await fetch(API_URL + "?action=getData");
+                const data = await response.json();
+                document.getElementById('result').innerHTML = "✅ Lidhja funksionon!<br>" + JSON.stringify(data);
+            } catch(e) {
+                document.getElementById('result').innerHTML = "❌ Gabim: " + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
